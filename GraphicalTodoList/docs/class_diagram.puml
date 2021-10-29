@@ -1,0 +1,120 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class Application
+{
+    +static void main(String[] args)
+    +void start(Stage stage)
+}
+
++class ApplicationController
+{
+
+    -Button addNewListButton
+
+    -ListView<?> availableListView
+
+    -Label currentListTitleLabel
+
+    -CheckBox item1Checkbox
+
+    -ToggleGroup listViewModeToggleGroup
+
+    -MenuItem loadListsMenuItem
+
+    -Button removeSelectedListsButton
+
+    -MenuItem saveSelectedListsMenuItem
+
+    -RadioMenuItem viewAllItemsRadioMenuItem
+
+    -RadioMenuItem viewCompletedItemsOnlyRadioMenuItem
+
+    -RadioMenuItem viewIncompleteItemsOnlyRadioMenuItem
+
+    +void addNewItemButtonPressed(ActionEvent actionEvent)
+
+    +void addNewListButtonPressed(ActionEvent event)
+
+    +void removeSelectedListsButtonPressed(ActionEvent event)
+
+    +void viewAllListItemsRadioMenuItemSelected(ActionEvent actionEvent)
+
+    +void viewIncompleteItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
+
+    +void viewCompletedItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
+
+    +void saveSelectedListsMenuItemSelected(ActionEvent actionEvent)
+
+    +void loadListsMenuItemSelected(ActionEvent actionEvent)
+
+    -GridPane todoListToGridPane(List<ListItem> items)
+
+    -void updateSceneGraph(GridPane gp)
+
+    +void initialize()
+}
+
++class ListItem
+{
+    -boolean itemCompleted
+    -String description
+    -LocalDate dueDate
+
+    +ListItem()
+
+    +ListItem(boolean itemCompleted, String description, LocalDate dueDate)
+
+    +ListItem(boolean itemCompleted, String description)
+
+    +void setItemCompleted(boolean itemCompleted)
+
+    +boolean isItemCompleted()
+
+    +void setDescription(String description)
+
+    +String getDescription()
+
+    +void setDueDate(LocalDate dueDate)
+
+    +LocalDate getDueDate()
+}
+
++class TodoList
+{
+    -String title
+    -final ArrayList<ListItem> listItems
+
+    +TodoList()
+
+    +TodoList(String title, List<ListItem> listItems)
+
+    +void setTitle(String title)
+
+    +String getTitle()
+
+    +void addItemToList()
+
+    +void removeListItem(int index)
+
+    +List<ListItem> getListItems()
+
+    +List<ListItem> getCompletedItems()
+
+    +List<ListItem> getIncompleteItems()
+}
+
++class ApplicationStateSerializer
+{
+    +void saveListsToFile(List<TodoList> lists, Path filePath)
+
+    +List<TodoList> loadListsFromFile(Path filePath)
+
+    -ListItem convertStringToListItem(String line)
+}
+
+ApplicationController -- ApplicationStateSerializer
+ListItem *-- TodoList
+ApplicationController *-- TodoList
+
+@enduml

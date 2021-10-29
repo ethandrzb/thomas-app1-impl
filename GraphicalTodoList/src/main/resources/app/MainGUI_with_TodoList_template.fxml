@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefWidth="755.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.TodoListApplicationController">
+   <center>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="755.0">
+         <left>
+            <BorderPane BorderPane.alignment="CENTER">
+               <center>
+                  <ListView fx:id="availableListView" prefWidth="196.0" BorderPane.alignment="CENTER" />
+               </center>
+               <bottom>
+                  <ToolBar prefHeight="13.0" prefWidth="196.0" BorderPane.alignment="CENTER">
+                     <items>
+                        <Button fx:id="addNewListButton" mnemonicParsing="false" onAction="#addNewListButtonPressed" text="Add New List" />
+                        <Button fx:id="removeSelectedListsButton" mnemonicParsing="false" onAction="#removeSelectedListsButtonPressed" text="Remove List(s)" />
+                     </items>
+                  </ToolBar>
+               </bottom>
+               <top>
+                  <Label prefHeight="9.0" prefWidth="99.0" text="Available Lists" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </top>
+            </BorderPane>
+         </left>
+         <right>
+            <VBox alignment="TOP_CENTER" prefHeight="348.0" prefWidth="559.0" spacing="5.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="currentListTitleLabel" text="List Title">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <ScrollPane hbarPolicy="NEVER">
+                     <content>
+                        <GridPane gridLinesVisible="true" prefWidth="559.0">
+                          <columnConstraints>
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="126.5" minWidth="0.0" prefWidth="31.0" />
+                            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="277.0" minWidth="10.0" prefWidth="252.0" />
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="117.5" minHeight="0.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="289.0" minHeight="0.0" prefHeight="81.5" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="298.0" minHeight="10.0" prefHeight="117.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="298.0" minHeight="10.0" prefHeight="119.5" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label alignment="CENTER" text="Description" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </Label>
+                              <Label text="Due Date" GridPane.columnIndex="2" />
+                              <CheckBox fx:id="item1Checkbox" mnemonicParsing="false" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="item2Checkbox" mnemonicParsing="false" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="item3Checkbox" mnemonicParsing="false" GridPane.rowIndex="3" />
+                              <Button fx:id="item1RemoveButton" mnemonicParsing="false" text="Remove" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <Button fx:id="item2RemoveButton" mnemonicParsing="false" text="Remove" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <Button fx:id="item3RemoveButton" mnemonicParsing="false" text="Remove" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <Label fx:id="item1DescriptionLabel" text="Item 1 Description" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label fx:id="item2DescriptionLabel" text="Item 2 Description" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label fx:id="item3DescriptionLabel" text="Item 3 Description" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <DatePicker fx:id="item1DueDatePicker" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <DatePicker fx:id="item2DueDatePicker" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <DatePicker fx:id="item3DueDatePicker" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                           </children>
+                        </GridPane>
+                     </content>
+                  </ScrollPane>
+                  <Button fx:id="addItemButton" alignment="CENTER" mnemonicParsing="false" onAction="#addNewItemButtonPressed" text="Add Item" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
+            </VBox>
+         </right>
+      </BorderPane>
+   </center>
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem fx:id="saveSelectedListsMenuItem" mnemonicParsing="false" onAction="#saveSelectedListsMenuItemSelected" text="Save Selected List(s)" />
+                  <MenuItem fx:id="loadListsMenuItem" mnemonicParsing="false" onAction="#loadListsMenuItemSelected" text="Load List(s)" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="View">
+               <items>
+                  <RadioMenuItem fx:id="viewAllItemsRadioMenuItem" mnemonicParsing="false" onAction="#viewAllListItemsRadioMenuItemSelected" text="All items">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="listViewModeToggleGroup" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem fx:id="viewIncompleteItemsOnlyRadioMenuItem" mnemonicParsing="false" onAction="#viewIncompleteItemsOnlyRadioMenuItemSelected" text="Incomplete items only" toggleGroup="$listViewModeToggleGroup" />
+                  <RadioMenuItem fx:id="viewCompletedItemsOnlyRadioMenuItem" mnemonicParsing="false" onAction="#viewCompletedItemsOnlyRadioMenuItemSelected" text="Completed items" toggleGroup="$listViewModeToggleGroup" />
+               </items>
+            </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+</BorderPane>
