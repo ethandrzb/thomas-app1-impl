@@ -20,6 +20,7 @@ public class ListItem
         dueDate = null;
     }
 
+    // Due date provided
     public ListItem(boolean itemCompleted, String description, LocalDate dueDate)
     {
         this.itemCompleted = itemCompleted;
@@ -27,6 +28,7 @@ public class ListItem
         this.dueDate = dueDate;
     }
 
+    // No due date provided
     public ListItem(boolean itemCompleted, String description)
     {
         this.itemCompleted = itemCompleted;
@@ -36,34 +38,31 @@ public class ListItem
 
     public void setItemCompleted(boolean itemCompleted)
     {
-        // update itemCompleted
+        this.itemCompleted = itemCompleted;
     }
 
     public boolean isItemCompleted()
     {
-//        return itemCompleted
-        return false;
+        return itemCompleted;
     }
 
     public void setDescription(String description)
     {
-//        update description
+        this.description =  description;
     }
 
     public String getDescription()
     {
-//        return description
-        return "";
+        return description;
     }
 
     public void setDueDate(LocalDate dueDate)
     {
-        // update due date
+        this.dueDate = dueDate;
     }
 
     public LocalDate getDueDate()
     {
-//        return dueDate
-        return null;
+        return dueDate;
     }
 }
