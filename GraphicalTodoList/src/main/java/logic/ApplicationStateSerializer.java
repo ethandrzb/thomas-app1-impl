@@ -5,13 +5,16 @@
 
 package logic;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ApplicationStateSerializer
 {
-    public void saveListsToFile(List<TodoList> lists, Path filePath)
+    public void saveListToFile(List<TodoList> lists, Path filePath)
     {
         // Attempt to create new file at filePath
 
@@ -24,30 +27,51 @@ public class ApplicationStateSerializer
                 // Else, write "(Due Date: none)"
     }
 
-    public List<TodoList> loadListsFromFile(Path filePath)
+    public TodoList loadListFromFile(File file)
     {
-        // Attempt to load file at filePath
-
         // Create buffer to store ListItems
+        ArrayList<ListItem> buffer = new ArrayList<>();
 
-        // While there are still lines to be read
-            // If current line starts with "Title: " (i.e. new TodoList encountered)
-                // If listItem buffer isn't empty
-                    // Create new TodoList object with last read title and current ListItem buffer
-                // Empty ListItem buffer
-                // Read new list title
-            // Read current line as ListItem and add to ListItem buffer
+        String title = "";
 
-        return Collections.emptyList();
+        // Attempt to load file at filePath
+        try(Scanner fromFile = new Scanner(file))
+        {
+            // Get list title
+            title = fromFile.nextLine();
+            if(title.startsWith("Title: "))
+            {
+                // Remove "Title: " from title
+                title = title.substring(7);
+            }
+            else
+            {
+                System.err.println("No TodoList found in " + file.getAbsolutePath());
+            }
+
+            // While there are still lines to be read
+            while(fromFile.hasNext())
+            {
+                // Read current line as ListItem and add to ListItem buffer
+                buffer.add(convertStringToListItem(fromFile.nextLine()));
+            }
+        }
+        catch(FileNotFoundException e)
+        {
+            System.err.println("Unable to open file at " + file.getAbsolutePath());
+        }
+
+        return new TodoList(title, buffer);
     }
 
+    // TODO: Implement this function
     private ListItem convertStringToListItem(String line)
     {
         // Check if line starts with "[ ]"
             // If so, completed = false
             // If not, check if line starts with "[x]"
                 // If so, completed = true
-                // If not, display error message
+                // If not, throw IllegalArgumentException and display problematic line
 
         // Search for "(Due Date: yyyy-MM-dd)" anchored to end of line
         // If found
@@ -58,7 +82,7 @@ public class ApplicationStateSerializer
             // If found
                 // set hasDate flag to false
                 // Set end of description index to line.length - 17
-            // If not found, display error message
+            // If not found, throw IllegalArgumentException and display problematic line
 
         // Extract description from line using end of description index
 
