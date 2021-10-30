@@ -6,7 +6,6 @@
 package logic;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class TodoList
@@ -19,7 +18,8 @@ public class TodoList
         title = "";
         listItems = new ArrayList<>();
 
-        // Add empty first item to list?
+        // Add empty first item to list
+        addItemToList();
     }
 
     public TodoList(String title, List<ListItem> listItems)
@@ -30,53 +30,66 @@ public class TodoList
 
     public void setTitle(String title)
     {
-        // update list title
+        this.title = title;
     }
 
     public String getTitle()
     {
-//        return title
-        return "";
+        return title;
     }
 
     public void addItemToList()
     {
-        // Create new ListItem object with default parameters
-
-        // Add this object to listItems
+        // Create new ListItem object with default parameters and add it to listItems
+        listItems.add(new ListItem());
     }
 
     // Return boolean to indicate success?
     public void removeListItem(int index)
     {
         // Remove listItem at index, if it exists
+        listItems.remove(index);
     }
 
     public List<ListItem> getListItems()
     {
         // return all listItems
-        return Collections.emptyList();
+        return listItems;
     }
 
     public List<ListItem> getCompletedItems()
     {
         // Create output ArrayList
+        ArrayList<ListItem> completed = new ArrayList<>();
 
         // Add all completed listItems to it
+        for(ListItem item : listItems)
+        {
+            if(item.isItemCompleted())
+            {
+                completed.add(item);
+            }
+        }
 
         // Return this list
-
-        return Collections.emptyList();
+        return completed;
     }
 
     public List<ListItem> getIncompleteItems()
     {
         // Create output ArrayList
+        ArrayList<ListItem> incomplete = new ArrayList<>();
 
         // Add all incomplete listItems to it
+        for(ListItem item : listItems)
+        {
+            if(!item.isItemCompleted())
+            {
+                incomplete.add(item);
+            }
+        }
 
         // Return this list
-
-        return Collections.emptyList();
+        return incomplete;
     }
 }
