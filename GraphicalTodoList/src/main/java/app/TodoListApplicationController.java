@@ -14,8 +14,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 import logic.ListItem;
 
+import java.io.File;
 import java.util.List;
 
 public class TodoListApplicationController
@@ -113,6 +115,10 @@ public class TodoListApplicationController
     public void loadListsMenuItemSelected(ActionEvent actionEvent)
     {
         // Open a FileChooser so the user can specify from where the TodoLists should be loaded
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        File chosenFile = fileChooser.showOpenDialog(loadListsMenuItem.getParentPopup().getScene().getWindow());
 
         // Load lists from file
 

@@ -20,8 +20,8 @@ public class ApplicationStateSerializer
             // For each item in current TodoList
                 // Write completed checkbox ("[x]") or incomplete checkbox ("[ ]")
                 // Write item description
-                // If item has due date, write due date formatted as "yyyy-MM-dd"
-                // Else, write none
+                // If item has due date, write due date formatted as "(Due Date: yyyy-MM-dd)"
+                // Else, write "(Due Date: none)"
     }
 
     public List<TodoList> loadListsFromFile(Path filePath)
@@ -49,15 +49,15 @@ public class ApplicationStateSerializer
                 // If so, completed = true
                 // If not, display error message
 
-        // Search for "Date: yyyy-MM-dd" anchored to end of line
+        // Search for "(Due Date: yyyy-MM-dd)" anchored to end of line
         // If found
             // create new LocalDate object from the yyyy-MM-dd formatted date
             // Set hasDate flag to true
-            // Set end of description index to line.length - 18
-        // If not found, search for "Date: none" anchored to end of line
+            // Set end of description index to line.length - 24
+        // If not found, search for "(Due Date: none)" anchored to end of line
             // If found
                 // set hasDate flag to false
-                // Set end of description index to line.length - 11
+                // Set end of description index to line.length - 17
             // If not found, display error message
 
         // Extract description from line using end of description index
