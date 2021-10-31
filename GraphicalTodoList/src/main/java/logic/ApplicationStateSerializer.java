@@ -13,6 +13,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ApplicationStateSerializer
 {
@@ -63,7 +65,11 @@ public class ApplicationStateSerializer
             System.err.println("Unable to open file at " + file.getAbsolutePath());
         }
 
-        return new TodoList(title, buffer);
+        TodoList tl = new TodoList(title, buffer);
+        System.out.println(tl);
+
+//        return new TodoList(title, buffer);
+        return tl;
     }
 
     private ListItem convertStringToListItem(String line)
@@ -94,10 +100,10 @@ public class ApplicationStateSerializer
         }
 
         // Search for "(Due Date: yyyy-MM-dd)" anchored to end of line (Regex: "\(Due Date: \d\d\d\d-\d\d-\d\d\)$")
-        if(line.matches("\\(Due Date: \\d\\d\\d\\d-\\d\\d-\\d\\d\\)$"))
+        if(match(line,"\\(Due Date: \\d\\d\\d\\d-\\d\\d-\\d\\d\\)$"))
         {
             // create new LocalDate object from the yyyy-MM-dd formatted date
-            dueDate = LocalDate.parse(line.substring(line.lastIndexOf('(' + 10), line.length() - 1),
+            dueDate = LocalDate.parse(line.substring(line.lastIndexOf('(') + 11, line.length() - 1),
                     DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             // Set hasDate flag to true
@@ -107,7 +113,7 @@ public class ApplicationStateSerializer
             endOfDescription = line.length() - 23;
         }
         // If not found, search for "(Due Date: none)" anchored to end of line (Regex: "\(Due Date: none\)$"
-        else if(line.matches("\\(Due Date: none\\)$"))
+        else if(match(line,"\\(Due Date: none\\)$"))
         {
             // set hasDate flag to false
             hasDate = false;
@@ -134,5 +140,13 @@ public class ApplicationStateSerializer
         {
             return new ListItem(completed, description);
         }
+    }
+
+    private boolean match(String input, String regex)
+    {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+
+        return matcher.find();
     }
 }

@@ -70,6 +70,6 @@ public class ListItem
     {
         return "Description: " + description + "\n"
                 + "Completed?: " + (isItemCompleted() ? "Yes" : "No") + "\n"
-                + "Due Date: " + getDueDate().toString() + "\n";
+                + "Due Date: " + (dueDate != null ? getDueDate().toString() :"none") + "\n";
     }
 }

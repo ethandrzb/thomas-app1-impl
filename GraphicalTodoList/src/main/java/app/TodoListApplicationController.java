@@ -15,13 +15,16 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
+import logic.ApplicationStateSerializer;
 import logic.ListItem;
+import logic.TodoList;
 
 import java.io.File;
 import java.util.List;
 
 public class TodoListApplicationController
 {
+    private TodoList todoList;
 
     @FXML
     private Button addNewListButton;
@@ -114,13 +117,16 @@ public class TodoListApplicationController
 
     public void loadListsMenuItemSelected(ActionEvent actionEvent)
     {
+        ApplicationStateSerializer serializer = new ApplicationStateSerializer();
+
         // Open a FileChooser so the user can specify from where the TodoLists should be loaded
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
         File chosenFile = fileChooser.showOpenDialog(loadListsMenuItem.getParentPopup().getScene().getWindow());
 
-        // Load lists from file
+        // Load list from file
+        todoList = serializer.loadListFromFile(chosenFile);
 
         // Add loaded lists to currently loaded lists
     }
