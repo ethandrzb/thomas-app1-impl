@@ -65,4 +65,11 @@ public class ListItem
     {
         return dueDate;
     }
+
+    public String toString()
+    {
+        return "Description: " + description + "\n"
+                + "Completed?: " + (isItemCompleted() ? "Yes" : "No") + "\n"
+                + "Due Date: " + getDueDate().toString() + "\n";
+    }
 }

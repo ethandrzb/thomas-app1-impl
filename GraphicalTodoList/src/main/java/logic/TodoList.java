@@ -92,4 +92,21 @@ public class TodoList
         // Return this list
         return incomplete;
     }
+
+    public String toString()
+    {
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append("Title: ");
+        buffer.append(getTitle());
+        buffer.append('\n');
+
+        for(ListItem item : listItems)
+        {
+            buffer.append(item.toString());
+            buffer.append('\n');
+        }
+
+        return buffer.toString();
+    }
 }
