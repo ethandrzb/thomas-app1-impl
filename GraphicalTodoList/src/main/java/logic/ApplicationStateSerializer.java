@@ -8,6 +8,8 @@ package logic;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -64,32 +66,73 @@ public class ApplicationStateSerializer
         return new TodoList(title, buffer);
     }
 
-    // TODO: Implement this function
     private ListItem convertStringToListItem(String line)
     {
-        // Check if line starts with "[ ]"
-            // If so, completed = false
-            // If not, check if line starts with "[x]"
-                // If so, completed = true
-                // If not, throw IllegalArgumentException and display problematic line
+        boolean hasDate;
+        int endOfDescription;
 
-        // Search for "(Due Date: yyyy-MM-dd)" anchored to end of line
-        // If found
+        boolean completed;
+        String description;
+        LocalDate dueDate = null;
+
+        // Check if line starts with "[ ]"
+        if(line.startsWith("[ ] "))
+        {
+            // If so, completed = false
+            completed = false;
+        }
+        // If not, check if line starts with "[x]"
+        else if(line.startsWith("[x] "))
+        {
+            // If so, completed = true
+            completed = true;
+        }
+        else
+        {
+            // If not, throw IllegalArgumentException and display problematic line
+            throw new IllegalArgumentException("Line does not contain valid ListItem: " + line);
+        }
+
+        // Search for "(Due Date: yyyy-MM-dd)" anchored to end of line (Regex: "\(Due Date: \d\d\d\d-\d\d-\d\d\)$")
+        if(line.matches("\\(Due Date: \\d\\d\\d\\d-\\d\\d-\\d\\d\\)$"))
+        {
             // create new LocalDate object from the yyyy-MM-dd formatted date
+            dueDate = LocalDate.parse(line.substring(line.lastIndexOf('(' + 10), line.length() - 1),
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
             // Set hasDate flag to true
-            // Set end of description index to line.length - 24
-        // If not found, search for "(Due Date: none)" anchored to end of line
-            // If found
-                // set hasDate flag to false
-                // Set end of description index to line.length - 17
+            hasDate = true;
+
+            // Set end of description index to line.length - 23
+            endOfDescription = line.length() - 23;
+        }
+        // If not found, search for "(Due Date: none)" anchored to end of line (Regex: "\(Due Date: none\)$"
+        else if(line.matches("\\(Due Date: none\\)$"))
+        {
+            // set hasDate flag to false
+            hasDate = false;
+
+            // Set end of description index to line.length - 17
+            endOfDescription = line.length() - 17;
+        }
+        else
+        {
             // If not found, throw IllegalArgumentException and display problematic line
+            throw new IllegalArgumentException("Line does not contain valid ListItem: " + line);
+        }
 
         // Extract description from line using end of description index
+        description = line.substring(4, endOfDescription);
 
         // If hasDate flag is true, return new ListItem with completed, description, and dueDate
+        if(hasDate)
+        {
+            return new ListItem(completed, description, dueDate);
+        }
         // Else, return new ListItem with completed and description
-
-
-        return null;
+        else
+        {
+            return new ListItem(completed, description);
+        }
     }
 }
