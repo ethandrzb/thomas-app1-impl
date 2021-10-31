@@ -65,11 +65,7 @@ public class ApplicationStateSerializer
             System.err.println("Unable to open file at " + file.getAbsolutePath());
         }
 
-        TodoList tl = new TodoList(title, buffer);
-        System.out.println(tl);
-
-//        return new TodoList(title, buffer);
-        return tl;
+        return new TodoList(title, buffer);
     }
 
     private ListItem convertStringToListItem(String line)

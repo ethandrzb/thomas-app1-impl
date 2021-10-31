@@ -5,6 +5,8 @@
 
 package logic;
 
+import javafx.beans.property.IntegerProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ public class TodoList
 {
     private String title;
     private final ArrayList<ListItem> listItems;
+    IntegerProperty listSize;
 
     public TodoList()
     {
@@ -20,6 +23,7 @@ public class TodoList
 
         // Add empty first item to list
         addItemToList();
+        listSize.set(1);
     }
 
     public TodoList(String title, List<ListItem> listItems)
@@ -42,6 +46,8 @@ public class TodoList
     {
         // Create new ListItem object with default parameters and add it to listItems
         listItems.add(new ListItem());
+
+        listSize.add(1);
     }
 
     // Return boolean to indicate success?
@@ -49,6 +55,13 @@ public class TodoList
     {
         // Remove listItem at index, if it exists
         listItems.remove(index);
+
+        listSize.subtract(1);
+    }
+
+    public IntegerProperty getListSize()
+    {
+        return listSize;
     }
 
     public List<ListItem> getListItems()
