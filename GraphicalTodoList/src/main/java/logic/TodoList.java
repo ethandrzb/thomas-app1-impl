@@ -5,31 +5,41 @@
 
 package logic;
 
-import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class TodoList
 {
     private String title;
     private final ArrayList<ListItem> listItems;
-    IntegerProperty listSize;
+    private final ObservableList<ListItem> listItemsObservable;
+    private final SimpleIntegerProperty listSize = new SimpleIntegerProperty();
 
     public TodoList()
     {
         title = "";
         listItems = new ArrayList<>();
+        listItemsObservable = FXCollections.observableList(listItems);
+
+        // Add listener to list size
+        listItemsObservable.addListener((ListChangeListener<ListItem>) c -> listSize.set(listItemsObservable.size()));
 
         // Add empty first item to list
         addItemToList();
-        listSize.set(1);
     }
 
     public TodoList(String title, List<ListItem> listItems)
     {
         this.title = title;
         this.listItems = (ArrayList<ListItem>) listItems;
+        listItemsObservable = FXCollections.observableList(listItems);
+
+        // Add listener to list size
+        listItemsObservable.addListener((ListChangeListener<ListItem>) c -> listSize.set(listItemsObservable.size()));
     }
 
     public void setTitle(String title)
@@ -45,9 +55,7 @@ public class TodoList
     public void addItemToList()
     {
         // Create new ListItem object with default parameters and add it to listItems
-        listItems.add(new ListItem());
-
-        listSize.add(1);
+        listItemsObservable.add(new ListItem());
     }
 
     // Return boolean to indicate success?
@@ -55,11 +63,10 @@ public class TodoList
     {
         // Remove listItem at index, if it exists
         listItems.remove(index);
-
-        listSize.subtract(1);
+        listItemsObservable.remove(index);
     }
 
-    public IntegerProperty getListSize()
+    public SimpleIntegerProperty getListSize()
     {
         return listSize;
     }
@@ -67,7 +74,7 @@ public class TodoList
     public List<ListItem> getListItems()
     {
         // return all listItems
-        return listItems;
+        return listItemsObservable;
     }
 
     public List<ListItem> getCompletedItems()
@@ -76,7 +83,7 @@ public class TodoList
         ArrayList<ListItem> completed = new ArrayList<>();
 
         // Add all completed listItems to it
-        for(ListItem item : listItems)
+        for(ListItem item : listItemsObservable)
         {
             if(item.isItemCompleted())
             {
@@ -94,7 +101,7 @@ public class TodoList
         ArrayList<ListItem> incomplete = new ArrayList<>();
 
         // Add all incomplete listItems to it
-        for(ListItem item : listItems)
+        for(ListItem item : listItemsObservable)
         {
             if(!item.isItemCompleted())
             {
@@ -114,7 +121,7 @@ public class TodoList
         buffer.append(getTitle());
         buffer.append('\n');
 
-        for(ListItem item : listItems)
+        for(ListItem item : listItemsObservable)
         {
             buffer.append(item.toString());
             buffer.append('\n');

@@ -35,11 +35,7 @@ public class TodoListApplicationController
     private ArrayList<DatePicker> datePickers = new ArrayList<>();
 
     @FXML
-    private Button addNewListButton;
-
-    //TODO: Add test for 256 TodoLists
-    @FXML
-    private ListView<?> availableListView;
+    private Button addItemButton;
 
     @FXML
     private Label currentListTitleLabel;
@@ -51,10 +47,13 @@ public class TodoListApplicationController
     private MenuItem loadListsMenuItem;
 
     @FXML
-    private Button removeSelectedListsButton;
+    private MenuItem saveSelectedListsMenuItem;
 
     @FXML
-    private MenuItem saveSelectedListsMenuItem;
+    private ToggleGroup sortModeToggleGroup;
+
+    @FXML
+    private ScrollPane todoListContainerScrollPane;
 
     @FXML
     private RadioMenuItem viewAllItemsRadioMenuItem;
@@ -68,9 +67,8 @@ public class TodoListApplicationController
     @FXML
     public void addNewItemButtonPressed(ActionEvent actionEvent)
     {
-        // Get reference to currently selected TodoList
-
         // Add new item to this TodoList
+        todoList.addItemToList();
     }
 
     public void viewAllListItemsRadioMenuItemSelected(ActionEvent actionEvent)
@@ -121,6 +119,11 @@ public class TodoListApplicationController
 
         // Load list from file
         todoList = serializer.loadListFromFile(chosenFile);
+
+        // Add new listener to list size
+        todoList.getListSize().addListener((observable, oldValue, newValue) -> System.out.println(todoList.getListSize()));
+
+        // TODO: Add call to updateSceneGraph here
     }
 
     private GridPane todoListToGridPane()
@@ -243,10 +246,9 @@ public class TodoListApplicationController
 
     private void updateSceneGraph(GridPane gp)
     {
-        // Get current scene graph
-//        Scene currentScene = loadListsMenuItem.getParentPopup().getScene();
-
+        System.out.println("Called updateSceneGraph");
         // Discard GridPane of currently displayed list
+//        todoListContainerScrollPane.getChildrenUnmodifiable().add(gp);
 
         // Attach new GridPane to scene graph
 
@@ -255,6 +257,11 @@ public class TodoListApplicationController
 
     public void initialize()
     {
+        todoList = new TodoList();
+
+        // Add listener to todoList to monitor for changes in size
+        // Will be overwritten if the user loads a list.
+        todoList.getListSize().addListener((observable, oldValue, newValue) -> System.out.println(todoList.getListSize()));
 //        todoList.getListSize().addListener((observable, oldValue, newValue) -> updateSceneGraph(todoListToGridPane()));
 
         // Select viewAllListItemsRadioMenuItem by default
