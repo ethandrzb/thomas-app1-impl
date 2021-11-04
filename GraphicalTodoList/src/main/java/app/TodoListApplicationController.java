@@ -11,28 +11,26 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import logic.ApplicationStateSerializer;
-import logic.ListItem;
 import logic.TodoList;
 
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 public class TodoListApplicationController
 {
     private TodoList todoList;
-    private ArrayList<TextField> textFields = new ArrayList<>();
-    private ArrayList<CheckBox> checkBoxes = new ArrayList<>();
-    private ArrayList<DatePicker> datePickers = new ArrayList<>();
+    private final ArrayList<TextField> textFields = new ArrayList<>();
+    private final ArrayList<CheckBox> checkBoxes = new ArrayList<>();
+    private final ArrayList<DatePicker> datePickers = new ArrayList<>();
 
     @FXML
     private Button addItemButton;
@@ -50,10 +48,10 @@ public class TodoListApplicationController
     private MenuItem saveSelectedListsMenuItem;
 
     @FXML
-    private ToggleGroup sortModeToggleGroup;
+    public MenuItem clearListMenuItem;
 
     @FXML
-    private ScrollPane todoListContainerScrollPane;
+    private ToggleGroup sortModeToggleGroup;
 
     @FXML
     private RadioMenuItem viewAllItemsRadioMenuItem;
@@ -65,12 +63,16 @@ public class TodoListApplicationController
     private RadioMenuItem viewIncompleteItemsOnlyRadioMenuItem;
 
     @FXML
+    private  VBox listContainerVBox;
+
+    @FXML
     public void addNewItemButtonPressed(ActionEvent actionEvent)
     {
         // Add new item to this TodoList
         todoList.addItemToList();
     }
 
+    @FXML
     public void viewAllListItemsRadioMenuItemSelected(ActionEvent actionEvent)
     {
         // Get all listItems from currently displayed list
@@ -80,6 +82,7 @@ public class TodoListApplicationController
         // Attach GridPane to scene graph
     }
 
+    @FXML
     public void viewIncompleteItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
     {
         // Get all incomplete listItems from currently displayed list
@@ -89,6 +92,7 @@ public class TodoListApplicationController
         // Attach GridPane to scene graph
     }
 
+    @FXML
     public void viewCompletedItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
     {
         // Get all completed listItems from currently displayed list
@@ -98,6 +102,7 @@ public class TodoListApplicationController
         // Attach GridPane to scene graph
     }
 
+    @FXML
     public void saveSelectedListsMenuItemSelected(ActionEvent actionEvent)
     {
         // Get list of currently selected items in ListView
@@ -107,6 +112,7 @@ public class TodoListApplicationController
         // Save these TodoList objects to that file
     }
 
+    @FXML
     public void loadListsMenuItemSelected(ActionEvent actionEvent)
     {
         ApplicationStateSerializer serializer = new ApplicationStateSerializer();
@@ -117,23 +123,44 @@ public class TodoListApplicationController
 
         File chosenFile = fileChooser.showOpenDialog(loadListsMenuItem.getParentPopup().getScene().getWindow());
 
+        // User closed FileChooser without selecting a file
+        if(chosenFile == null)
+        {
+            return;
+        }
+
         // Load list from file
         todoList = serializer.loadListFromFile(chosenFile);
 
         // Add new listener to list size
-        todoList.getListSize().addListener((observable, oldValue, newValue) -> System.out.println(todoList.getListSize()));
+//        todoList.getListSize().addListener((observable, oldValue, newValue) -> System.out.println(todoList.getListSize()));
+        todoList.getListSize().addListener((observable, oldValue, newValue) -> updateDisplayedList());
 
-        // TODO: Add call to updateSceneGraph here
+        clearGeneratedControls();
+
+        updateDisplayedList();
+    }
+
+    private void clearGeneratedControls()
+    {
+        checkBoxes.clear();
+        textFields.clear();
+        datePickers.clear();
     }
 
     private GridPane todoListToGridPane()
     {
         GridPane table = new GridPane();
 
+        // Remove this
+        // Debug statement used to track differences between size of list in todoList and SimpleIntegerProperty bound to it
+        System.out.println(todoList.getListItems().size() + ", " + todoList.getListSize().getValue());
+
         for(int i=0; i<todoList.getListItems().size(); i++)
         {
 
-            if(checkBoxes.size() <= i)
+            // TODO: Remove control array size checkers
+//            if(checkBoxes.size() <= i)
             {
                 checkBoxes.add(new CheckBox());
                 checkBoxes.get(i).setTextFill(Color.WHITE);
@@ -141,10 +168,9 @@ public class TodoListApplicationController
                 int finalI1 = i;
                 checkBoxes.get(i).selectedProperty().addListener((observable, oldValue, newValue) ->
                         System.out.println("Checkbox " + finalI1 + ": " + newValue));
-
             }
 
-            if(textFields.size() <= i)
+//            if(textFields.size() <= i)
             {
                 textFields.add(new TextField());
                 textFields.get(i).setAlignment(Pos.CENTER);
@@ -166,7 +192,7 @@ public class TodoListApplicationController
                 });
             }
 
-            if(datePickers.size() <= i)
+//            if(datePickers.size() <= i)
             {
                 datePickers.add(new DatePicker());
                 datePickers.get(i).setConverter(new StringConverter<>()
@@ -244,32 +270,41 @@ public class TodoListApplicationController
 //        return null;
     }
 
-    private void updateSceneGraph(GridPane gp)
+    private void updateDisplayedList()
     {
-        System.out.println("Called updateSceneGraph");
+        GridPane gp = todoListToGridPane();
+
+        System.out.println("Called updateDisplayedList");
         // Discard GridPane of currently displayed list
 //        todoListContainerScrollPane.getChildrenUnmodifiable().add(gp);
 
-        // Attach new GridPane to scene graph
+        // Check if there's already something in the Vbox and remove it if it exists
+        if(!listContainerVBox.getChildren().isEmpty())
+        {
+            listContainerVBox.getChildren().clear();
+        }
 
-        // Execute changes/cleanup
+        listContainerVBox.getChildren().add(gp);
     }
 
+    @FXML
     public void initialize()
     {
         todoList = new TodoList();
 
         // Add listener to todoList to monitor for changes in size
         // Will be overwritten if the user loads a list.
-        todoList.getListSize().addListener((observable, oldValue, newValue) -> System.out.println(todoList.getListSize()));
-//        todoList.getListSize().addListener((observable, oldValue, newValue) -> updateSceneGraph(todoListToGridPane()));
+//        todoList.getListSize().addListener((observable, oldValue, newValue) -> System.out.println(todoList.getListSize()));
+        todoList.getListSize().addListener((observable, oldValue, newValue) -> updateDisplayedList());
 
-        // Select viewAllListItemsRadioMenuItem by default
+        updateDisplayedList();
+    }
 
-        // Initialize availableListView to empty list
-
-        // Add listener to availableListView to update it whenever the available list changes
-
-        // Add listener to availableListView to change the list shown on the right to match the currently selected list
+    @FXML
+    public void clearListMenuItemSelected(ActionEvent actionEvent)
+    {
+        clearGeneratedControls();
+        todoList.clear(); 
+        updateDisplayedList();
     }
 }

@@ -15,31 +15,33 @@ import java.util.*;
 public class TodoList
 {
     private String title;
-    private final ArrayList<ListItem> listItems;
-    private final ObservableList<ListItem> listItemsObservable;
+    private final ArrayList<ListItem> listItemsData;
+    private final ObservableList<ListItem> listItems;
     private final SimpleIntegerProperty listSize = new SimpleIntegerProperty();
 
     public TodoList()
     {
         title = "";
-        listItems = new ArrayList<>();
-        listItemsObservable = FXCollections.observableList(listItems);
+        listItemsData = new ArrayList<>();
+        listItems = FXCollections.observableList(listItemsData);
 
         // Add listener to list size
-        listItemsObservable.addListener((ListChangeListener<ListItem>) c -> listSize.set(listItemsObservable.size()));
+        listItems.addListener((ListChangeListener<ListItem>) c -> listSize.set(listItems.size()));
 
         // Add empty first item to list
         addItemToList();
     }
 
-    public TodoList(String title, List<ListItem> listItems)
+    public TodoList(String title, List<ListItem> listItemsData)
     {
         this.title = title;
-        this.listItems = (ArrayList<ListItem>) listItems;
-        listItemsObservable = FXCollections.observableList(listItems);
+        this.listItemsData = (ArrayList<ListItem>) listItemsData;
+        listItems = FXCollections.observableList(listItemsData);
+
+        listSize.set(listItems.size());
 
         // Add listener to list size
-        listItemsObservable.addListener((ListChangeListener<ListItem>) c -> listSize.set(listItemsObservable.size()));
+        listItems.addListener((ListChangeListener<ListItem>) c -> listSize.set(listItems.size()));
     }
 
     public void setTitle(String title)
@@ -55,15 +57,15 @@ public class TodoList
     public void addItemToList()
     {
         // Create new ListItem object with default parameters and add it to listItems
-        listItemsObservable.add(new ListItem());
+        listItems.add(new ListItem());
     }
 
     // Return boolean to indicate success?
     public void removeListItem(int index)
     {
         // Remove listItem at index, if it exists
+        listItemsData.remove(index);
         listItems.remove(index);
-        listItemsObservable.remove(index);
     }
 
     public SimpleIntegerProperty getListSize()
@@ -74,7 +76,7 @@ public class TodoList
     public List<ListItem> getListItems()
     {
         // return all listItems
-        return listItemsObservable;
+        return listItems;
     }
 
     public List<ListItem> getCompletedItems()
@@ -83,7 +85,7 @@ public class TodoList
         ArrayList<ListItem> completed = new ArrayList<>();
 
         // Add all completed listItems to it
-        for(ListItem item : listItemsObservable)
+        for(ListItem item : listItems)
         {
             if(item.isItemCompleted())
             {
@@ -101,7 +103,7 @@ public class TodoList
         ArrayList<ListItem> incomplete = new ArrayList<>();
 
         // Add all incomplete listItems to it
-        for(ListItem item : listItemsObservable)
+        for(ListItem item : listItems)
         {
             if(!item.isItemCompleted())
             {
@@ -113,6 +115,11 @@ public class TodoList
         return incomplete;
     }
 
+    public void clear()
+    {
+        listItems.clear();
+    }
+
     public String toString()
     {
         StringBuilder buffer = new StringBuilder();
@@ -121,7 +128,7 @@ public class TodoList
         buffer.append(getTitle());
         buffer.append('\n');
 
-        for(ListItem item : listItemsObservable)
+        for(ListItem item : listItems)
         {
             buffer.append(item.toString());
             buffer.append('\n');

@@ -2,6 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -10,6 +12,9 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -24,10 +29,44 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER">
+                  <ScrollPane hbarPolicy="NEVER">
                      <content>
-                        <VBox fx:id="listContainerVBox" maxWidth="1.7976931348623157E308" prefHeight="352.0" prefWidth="753.0" />
-                     </content></ScrollPane>
+                        <GridPane gridLinesVisible="true" prefHeight="350.0" prefWidth="753.0">
+                          <columnConstraints>
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="126.5" minWidth="0.0" prefWidth="31.0" />
+                            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="277.0" minWidth="10.0" prefWidth="252.0" />
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="336.5" minWidth="10.0" prefWidth="332.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="176.5" minWidth="10.0" prefWidth="31.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="117.5" minHeight="0.0" prefHeight="32.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="289.0" minHeight="0.0" prefHeight="81.5" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="298.0" minHeight="10.0" prefHeight="117.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="298.0" minHeight="10.0" prefHeight="119.5" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label alignment="CENTER" text="Description" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </Label>
+                              <Label text="Due Date" GridPane.columnIndex="2" />
+                              <CheckBox fx:id="item1Checkbox" mnemonicParsing="false" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="item2Checkbox" mnemonicParsing="false" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="item3Checkbox" mnemonicParsing="false" GridPane.rowIndex="3" />
+                              <Button fx:id="item1RemoveButton" mnemonicParsing="false" text="Remove" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <Button fx:id="item2RemoveButton" mnemonicParsing="false" text="Remove" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <Button fx:id="item3RemoveButton" mnemonicParsing="false" text="Remove" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <Label fx:id="item1DescriptionLabel" text="Item 1 Description" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label fx:id="item2DescriptionLabel" text="Item 2 Description" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label fx:id="item3DescriptionLabel" text="Item 3 Description" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <DatePicker fx:id="item1DueDatePicker" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <DatePicker fx:id="item2DueDatePicker" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <DatePicker fx:id="item3DueDatePicker" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                           </children>
+                        </GridPane>
+                     </content>
+                  </ScrollPane>
                   <Button fx:id="addItemButton" alignment="CENTER" mnemonicParsing="false" onAction="#addNewItemButtonPressed" text="Add Item" />
                </children>
                <padding>
@@ -48,7 +87,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem fx:id="clearListMenuItem" mnemonicParsing="false" onAction="#clearListMenuItemSelected" text="Clear list" />
+              <MenuItem mnemonicParsing="false" text="Clear list" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="View">
