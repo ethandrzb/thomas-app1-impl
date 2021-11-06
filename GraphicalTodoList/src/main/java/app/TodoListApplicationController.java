@@ -26,6 +26,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+// TODO: Remove all debugging print statements
+
 public class TodoListApplicationController
 {
     private TodoList todoList;
@@ -168,9 +170,13 @@ public class TodoListApplicationController
                 checkBoxes.get(i).setAlignment(Pos.CENTER);
                 int finalI1 = i;
 
-                // Attach change listener to current checkbox
+                // Attach change listener to current checkbox to update the current ListItem's completed field.
                 checkBoxes.get(i).selectedProperty().addListener((observable, oldValue, newValue) ->
-                        System.out.println("Checkbox " + finalI1 + ": " + newValue));
+                {
+                    todoList.getListItems().get(finalI1).setItemCompleted(newValue);
+
+                    System.out.println("Checkbox " + finalI1 + ": " + newValue);
+                });
 
                 // Load completion of current ListItem in TodoList to associated CheckBox
                 checkBoxes.get(i).setSelected(todoList.getListItems().get(i).isItemCompleted());
@@ -194,8 +200,13 @@ public class TodoListApplicationController
                     @Override
                     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
                     {
+                        // Truncate input string to fit in length limit
                         newLength = Math.min(newValue.length(), maxLength);
                         textFields.get(finalI2).setText(textFields.get(finalI2).getText().substring(0,newLength));
+
+                        // Update description of current ListItem
+                        todoList.getListItems().get(finalI2).setDescription(textFields.get(finalI2).getText());
+
                         System.out.println("TextField " + finalI2 + ": " + newValue);
                     }
                 });
@@ -234,7 +245,12 @@ public class TodoListApplicationController
 
                 // Attach listener to current DatePicker
                 datePickers.get(i).valueProperty().addListener((observable, oldValue, newValue) ->
-                        System.out.println("DatePicker " + finalI3 + ": " + newValue));
+                        {
+                            // Update due date of current ListItem
+                            todoList.getListItems().get(finalI3).setDueDate(datePickers.get(finalI3).getValue());
+
+                            System.out.println("DatePicker " + finalI3 + ": " + newValue);
+                        });
 
                 // Load date of current ListItem in TodoList to associated DatePicker
                 datePickers.get(i).valueProperty().set(todoList.getListItems().get(i).getDueDate());
@@ -293,7 +309,6 @@ public class TodoListApplicationController
 
         System.out.println("Called updateDisplayedList");
         // Discard GridPane of currently displayed list
-//        todoListContainerScrollPane.getChildrenUnmodifiable().add(gp);
 
         // Check if there's already something in the Vbox and remove it if it exists
         if(!listContainerVBox.getChildren().isEmpty())
