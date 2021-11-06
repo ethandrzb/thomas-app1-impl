@@ -50,13 +50,13 @@
                <items>
                   <Menu mnemonicParsing="false" text="Filter list items">
                     <items>
-                        <RadioMenuItem fx:id="viewAllItemsRadioMenuItem" mnemonicParsing="false" onAction="#viewAllListItemsRadioMenuItemSelected" selected="true" text="All items">
+                        <RadioMenuItem fx:id="viewAllItemsRadioMenuItem" mnemonicParsing="false" selected="true" text="All items">
                            <toggleGroup>
                               <ToggleGroup fx:id="listFilterOptionToggleGroup" />
                            </toggleGroup>
                         </RadioMenuItem>
-                        <RadioMenuItem fx:id="viewIncompleteItemsOnlyRadioMenuItem" mnemonicParsing="false" onAction="#viewIncompleteItemsOnlyRadioMenuItemSelected" text="Incomplete items only" toggleGroup="$listFilterOptionToggleGroup" />
-                        <RadioMenuItem fx:id="viewCompletedItemsOnlyRadioMenuItem" mnemonicParsing="false" onAction="#viewCompletedItemsOnlyRadioMenuItemSelected" text="Completed items" toggleGroup="$listFilterOptionToggleGroup" />
+                        <RadioMenuItem fx:id="viewIncompleteItemsOnlyRadioMenuItem" mnemonicParsing="false" text="Incomplete items only" toggleGroup="$listFilterOptionToggleGroup" />
+                        <RadioMenuItem fx:id="viewCompletedItemsOnlyRadioMenuItem" mnemonicParsing="false" text="Completed items" toggleGroup="$listFilterOptionToggleGroup" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Sort by (TODO)">

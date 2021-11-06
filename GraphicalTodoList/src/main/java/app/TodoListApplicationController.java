@@ -79,42 +79,6 @@ public class TodoListApplicationController
     }
 
     @FXML
-    public void viewAllListItemsRadioMenuItemSelected(ActionEvent actionEvent)
-    {
-//        selectedFilterOption = listItemFilterOption.ALL;
-
-        // Get all listItems from currently displayed list
-
-        // Generate GridPane from list items
-
-        // Attach GridPane to scene graph
-    }
-
-    @FXML
-    public void viewIncompleteItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
-    {
-//        selectedFilterOption = listItemFilterOption.INCOMPLETE_ONLY;
-
-        // Get all incomplete listItems from currently displayed list
-
-        // Generate GridPane from list items
-
-        // Attach GridPane to scene graph
-    }
-
-    @FXML
-    public void viewCompletedItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
-    {
-//        selectedFilterOption = listItemFilterOption.COMPLETE_ONLY;
-
-        // Get all completed listItems from currently displayed list
-
-        // Generate GridPane from list items
-
-        // Attach GridPane to scene graph
-    }
-
-    @FXML
     public void saveSelectedListsMenuItemSelected(ActionEvent actionEvent)
     {
         // Get list of currently selected items in ListView
