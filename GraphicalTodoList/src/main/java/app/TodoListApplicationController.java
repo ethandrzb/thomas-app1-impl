@@ -39,7 +39,7 @@ public class TodoListApplicationController
     private Button addItemButton;
 
     @FXML
-    private Label currentListTitleLabel;
+    private TextField currentListTitleTextField;
 
     @FXML
     private ToggleGroup listViewModeToggleGroup;
@@ -113,6 +113,8 @@ public class TodoListApplicationController
         // Open a FileChooser so the user can specify where the selected TodoLists should be saved
 
         // Save these TodoList objects to that file
+
+        System.out.println(todoList);
     }
 
     @FXML
@@ -157,9 +159,9 @@ public class TodoListApplicationController
     {
         GridPane table = new GridPane();
 
-        // Remove this
+        // TODO: Remove this
         // Debug statement used to track differences between size of list in todoList and SimpleIntegerProperty bound to it
-        System.out.println(todoList.getListItems().size() + ", " + todoList.getListSize().getValue());
+//        System.out.println(todoList.getListItems().size() + ", " + todoList.getListSize().getValue());
 
         for(int i=0; i<todoList.getListItems().size(); i++)
         {
@@ -307,8 +309,7 @@ public class TodoListApplicationController
     {
         GridPane gp = todoListToGridPane();
 
-        System.out.println("Called updateDisplayedList");
-        // Discard GridPane of currently displayed list
+        currentListTitleTextField.setText(todoList.getTitle());
 
         // Check if there's already something in the Vbox and remove it if it exists
         if(!listContainerVBox.getChildren().isEmpty())
@@ -330,6 +331,12 @@ public class TodoListApplicationController
         todoList.getListSize().addListener((observable, oldValue, newValue) -> updateDisplayedList());
 
         updateDisplayedList();
+
+        currentListTitleTextField.textProperty().addListener((observable, oldValue, newValue) ->
+        {
+            todoList.setTitle(newValue);
+            System.out.println("List title = " + newValue);
+        });
     }
 
     @FXML
