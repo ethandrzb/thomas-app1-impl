@@ -28,6 +28,10 @@ public class TodoListApplication extends javafx.application.Application
 
         Scene scene = new Scene(root); // attach scene graph to scene
         stage.setTitle("Graphical Todo List"); // displayed in window's title bar
+
+        // Add stylesheet for TextField error borders
+        scene.getStylesheets().add(String.valueOf(getClass().getResource("TextFieldErrorBorder.css")));
+
         stage.setScene(scene); // attach scene to stage
         stage.show(); // display the stage
     }

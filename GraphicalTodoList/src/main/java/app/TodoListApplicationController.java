@@ -7,6 +7,7 @@ package app;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -24,12 +25,15 @@ import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 
 // TODO: Remove all debugging print statements
+// TODO: Display error dialog box when save/load fails
 
 public class TodoListApplicationController
 {
     private enum listItemFilterOption {ALL, INCOMPLETE_ONLY, COMPLETE_ONLY}
+    private String textFieldErrorBorderStyleName = "error";
 
     private listItemFilterOption selectedFilterOption;
 
@@ -69,13 +73,42 @@ public class TodoListApplicationController
     private RadioMenuItem viewIncompleteItemsOnlyRadioMenuItem;
 
     @FXML
-    private  VBox listContainerVBox;
+    private VBox listContainerVBox;
 
     @FXML
     public void addNewItemButtonPressed(ActionEvent actionEvent)
     {
-        // Add new item to this TodoList
-        todoList.addItemToList();
+        // Check if most recently added item has a non-empty description
+        if(validateAllItemDescriptionsNonEmpty())
+        {
+            // Add new item to this TodoList
+            todoList.addItemToList();
+        }
+        else
+        {
+            System.out.println("unable to add new item");
+            // Display dialog box here
+        }
+    }
+
+    // Returns false if todoList contains an item with an empty description field.
+    // Otherwise, returns true.
+    private boolean validateAllItemDescriptionsNonEmpty()
+    {
+        boolean allItemDescriptionsNonEmpty = true;
+
+        for(int i = 0; i < todoList.getListSize().get(); i++)
+        {
+            if(todoList.getAllListItems().get(i).getDescription().isEmpty())
+            {
+                // Apply error border to empty textfield
+                applyTextFieldErrorBorder(textFields.get(i));
+
+                allItemDescriptionsNonEmpty = false;
+            }
+        }
+
+        return allItemDescriptionsNonEmpty;
     }
 
     @FXML
@@ -166,23 +199,32 @@ public class TodoListApplicationController
 //                        System.out.println("TextField " + finalI2 + ": " + newValue));
 
                 // Attach listener to current TextField
-                textFields.get(i).textProperty().addListener(new ChangeListener<String>()
+                textFields.get(i).textProperty().addListener((observable, oldValue, newValue) ->
                 {
-                    // TODO: Change maxLength to 256
-                    private int maxLength = 10;
-                    private int newLength;
-                    @Override
-                    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
-                    {
-                        // Truncate input string to fit in length limit
-                        newLength = Math.min(newValue.length(), maxLength);
-                        textFields.get(finalI2).setText(textFields.get(finalI2).getText().substring(0,newLength));
+//                    ObservableList<String> styleClass = textFields.get(finalI2).getStyleClass();
+//                    String textFieldErrorBorderStyleName = "error";
 
-                        // Update description of current ListItem
-                        todoList.getListItem(finalI2).setDescription(textFields.get(finalI2).getText());
+                    // TODO: Change maxLength to 256
+                    int maxLength = 10;
+                    int newLength = Math.min(newValue.length(), maxLength);
+
+                    // Highlight TextField if empty
+                    if(newLength == 0)
+                    {
+                        applyTextFieldErrorBorder(textFields.get(finalI2));
+                    }
+                    else
+                    {
+                        removeTextFieldErrorBorder(textFields.get(finalI2));
+                    }
+
+                    // Truncate input string to fit in length limit
+                    textFields.get(finalI2).setText(textFields.get(finalI2).getText().substring(0, newLength));
+
+                    // Update description of current ListItem
+                    todoList.getListItem(finalI2).setDescription(textFields.get(finalI2).getText());
 
 //                        System.out.println("TextField " + finalI2 + ": " + newValue);
-                    }
                 });
 
                 // Load description of current ListItem in TodoList to associated TextField
@@ -285,6 +327,23 @@ public class TodoListApplicationController
             // Add remove Button to Column 3
 
 //        return null;
+    }
+
+    private void applyTextFieldErrorBorder(TextField tf)
+    {
+        ObservableList<String> styleClass = tf.getStyleClass();
+
+        if(!styleClass.contains(textFieldErrorBorderStyleName))
+        {
+            styleClass.add(textFieldErrorBorderStyleName);
+        }
+    }
+
+    private void removeTextFieldErrorBorder(TextField tf)
+    {
+        ObservableList<String> styleClass = tf.getStyleClass();
+
+        styleClass.removeAll(Collections.singleton(textFieldErrorBorderStyleName));
     }
 
     private void updateDisplayedList()
