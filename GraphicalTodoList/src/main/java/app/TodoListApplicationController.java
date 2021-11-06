@@ -78,7 +78,7 @@ public class TodoListApplicationController
     @FXML
     public void addNewItemButtonPressed(ActionEvent actionEvent)
     {
-        // TODO: Display dialog box if there exists an item with an empty description.
+        // TODO: Display dialog box to alert user that there exists an item with an empty description.
         // Check if most recently added item has a non-empty description
         if(validateAllItemDescriptionsNonEmpty())
         {
@@ -115,7 +115,6 @@ public class TodoListApplicationController
         // Open a FileChooser so the user can specify where the selected TodoLists should be saved
 
         // Save these TodoList objects to that file
-        System.out.println(todoList);
     }
 
     @FXML
@@ -159,12 +158,9 @@ public class TodoListApplicationController
     {
         GridPane table = new GridPane();
 
-        // TODO: Remove this
-        // Debug statement used to track differences between size of list in todoList and SimpleIntegerProperty bound to it
-//        System.out.println(todoList.getListItems().size() + ", " + todoList.getListSize().getValue());
-
         for(int i = 0; i < todoList.getAllListItems().size(); i++)
         {
+            // Make new control objects, if necessary
             if(checkBoxes.size() <= i)
             {
                 addCheckBox(i);
@@ -215,11 +211,8 @@ public class TodoListApplicationController
 
         // Attach change listener to current checkbox to update the current ListItem's completed field.
         checkBoxes.get(index).selectedProperty().addListener((observable, oldValue, newValue) ->
-        {
-            todoList.getListItem(index).setItemCompleted(newValue);
-
-//                    System.out.println("Checkbox " + finalI1 + ": " + newValue);
-        });
+            todoList.getListItem(index).setItemCompleted(newValue)
+        );
 
         // Load completion of current ListItem in TodoList to associated CheckBox
         checkBoxes.get(index).setSelected(todoList.getListItem(index).isItemCompleted());
@@ -230,15 +223,9 @@ public class TodoListApplicationController
         textFields.add(new TextField());
         textFields.get(index).setAlignment(Pos.CENTER);
 
-        //                textFields.get(i).textProperty().addListener((observable, oldValue, newValue) ->
-//                        System.out.println("TextField " + finalI2 + ": " + newValue));
-
         // Attach listener to current TextField
         textFields.get(index).textProperty().addListener((observable, oldValue, newValue) ->
         {
-//                    ObservableList<String> styleClass = textFields.get(finalI2).getStyleClass();
-//                    String textFieldErrorBorderStyleName = "error";
-
             // TODO: Change maxLength to 256
             int maxLength = 10;
             int newLength = Math.min(newValue.length(), maxLength);
@@ -258,8 +245,6 @@ public class TodoListApplicationController
 
             // Update description of current ListItem
             todoList.getListItem(index).setDescription(textFields.get(index).getText());
-
-//                        System.out.println("TextField " + finalI2 + ": " + newValue);
         });
 
         // Load description of current ListItem in TodoList to associated TextField
@@ -294,12 +279,9 @@ public class TodoListApplicationController
 
         // Attach listener to current DatePicker
         datePickers.get(index).valueProperty().addListener((observable, oldValue, newValue) ->
-        {
             // Update due date of current ListItem
-            todoList.getListItem(index).setDueDate(datePickers.get(index).getValue());
-
-//                            System.out.println("DatePicker " + finalI3 + ": " + newValue);
-        });
+            todoList.getListItem(index).setDueDate(datePickers.get(index).getValue())
+        );
 
         // Load date of current ListItem in TodoList to associated DatePicker
         datePickers.get(index).valueProperty().set(todoList.getListItem(index).getDueDate());
