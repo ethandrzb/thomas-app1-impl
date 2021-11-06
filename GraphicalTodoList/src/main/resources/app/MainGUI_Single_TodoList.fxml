@@ -52,21 +52,21 @@
                     <items>
                         <RadioMenuItem fx:id="viewAllItemsRadioMenuItem" mnemonicParsing="false" onAction="#viewAllListItemsRadioMenuItemSelected" selected="true" text="All items">
                            <toggleGroup>
-                              <ToggleGroup fx:id="listViewModeToggleGroup" />
+                              <ToggleGroup fx:id="listFilterOptionToggleGroup" />
                            </toggleGroup>
                         </RadioMenuItem>
-                        <RadioMenuItem fx:id="viewIncompleteItemsOnlyRadioMenuItem" mnemonicParsing="false" onAction="#viewIncompleteItemsOnlyRadioMenuItemSelected" text="Incomplete items only" toggleGroup="$listViewModeToggleGroup" />
-                        <RadioMenuItem fx:id="viewCompletedItemsOnlyRadioMenuItem" mnemonicParsing="false" onAction="#viewCompletedItemsOnlyRadioMenuItemSelected" text="Completed items" toggleGroup="$listViewModeToggleGroup" />
+                        <RadioMenuItem fx:id="viewIncompleteItemsOnlyRadioMenuItem" mnemonicParsing="false" onAction="#viewIncompleteItemsOnlyRadioMenuItemSelected" text="Incomplete items only" toggleGroup="$listFilterOptionToggleGroup" />
+                        <RadioMenuItem fx:id="viewCompletedItemsOnlyRadioMenuItem" mnemonicParsing="false" onAction="#viewCompletedItemsOnlyRadioMenuItemSelected" text="Completed items" toggleGroup="$listFilterOptionToggleGroup" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Sort by (TODO)">
                     <items>
                         <RadioMenuItem mnemonicParsing="false" selected="true" text="Sort by Date Added">
                            <toggleGroup>
-                              <ToggleGroup fx:id="sortModeToggleGroup" />
+                              <ToggleGroup fx:id="sortOptionToggleGroup" />
                            </toggleGroup>
                         </RadioMenuItem>
-                        <RadioMenuItem mnemonicParsing="false" text="Sort by Due Date" toggleGroup="$sortModeToggleGroup" />
+                        <RadioMenuItem mnemonicParsing="false" text="Sort by Due Date" toggleGroup="$sortOptionToggleGroup" />
                     </items>
                   </Menu>
                </items>

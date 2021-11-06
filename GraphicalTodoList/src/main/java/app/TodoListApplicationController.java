@@ -45,7 +45,7 @@ public class TodoListApplicationController
     private TextField currentListTitleTextField;
 
     @FXML
-    private ToggleGroup listViewModeToggleGroup;
+    private ToggleGroup listFilterOptionToggleGroup;
 
     @FXML
     private MenuItem loadListsMenuItem;
@@ -57,7 +57,7 @@ public class TodoListApplicationController
     public MenuItem clearListMenuItem;
 
     @FXML
-    private ToggleGroup sortModeToggleGroup;
+    private ToggleGroup sortOptionToggleGroup;
 
     @FXML
     private RadioMenuItem viewAllItemsRadioMenuItem;
@@ -374,7 +374,7 @@ public class TodoListApplicationController
         });
 
         // Add listener to listViewMode
-        listViewModeToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
+        listFilterOptionToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
                                                                         updateDisplayedList());
     }
 
