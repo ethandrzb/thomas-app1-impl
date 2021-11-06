@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import logic.ApplicationStateSerializer;
+import logic.ListItem;
 import logic.TodoList;
 
 import java.io.File;
@@ -148,6 +149,8 @@ public class TodoListApplicationController
         datePickers.clear();
     }
 
+    // TODO: Add list selection parameter
+    // TODO: Add sort list parameter
     private GridPane todoListToGridPane()
     {
         GridPane table = new GridPane();
@@ -158,19 +161,22 @@ public class TodoListApplicationController
 
         for(int i=0; i<todoList.getListItems().size(); i++)
         {
-
-            // TODO: Remove control array size checkers
-//            if(checkBoxes.size() <= i)
+            if(checkBoxes.size() <= i)
             {
                 checkBoxes.add(new CheckBox());
                 checkBoxes.get(i).setTextFill(Color.WHITE);
                 checkBoxes.get(i).setAlignment(Pos.CENTER);
                 int finalI1 = i;
+
+                // Attach change listener to current checkbox
                 checkBoxes.get(i).selectedProperty().addListener((observable, oldValue, newValue) ->
                         System.out.println("Checkbox " + finalI1 + ": " + newValue));
+
+                // Load completion of current ListItem in TodoList to associated CheckBox
+                checkBoxes.get(i).setSelected(todoList.getListItems().get(i).isItemCompleted());
             }
 
-//            if(textFields.size() <= i)
+            if(textFields.size() <= i)
             {
                 textFields.add(new TextField());
                 textFields.get(i).setAlignment(Pos.CENTER);
@@ -178,8 +184,11 @@ public class TodoListApplicationController
                 int finalI2 = i;
 //                textFields.get(i).textProperty().addListener((observable, oldValue, newValue) ->
 //                        System.out.println("TextField " + finalI2 + ": " + newValue));
+
+                // Attach listener to current TextField
                 textFields.get(i).textProperty().addListener(new ChangeListener<String>()
                 {
+                    // TODO: Change maxLength to 256
                     private int maxLength = 10;
                     private int newLength;
                     @Override
@@ -190,9 +199,12 @@ public class TodoListApplicationController
                         System.out.println("TextField " + finalI2 + ": " + newValue);
                     }
                 });
+
+                // Load description of current ListItem in TodoList to associated TextField
+                textFields.get(i).setText(todoList.getListItems().get(i).getDescription());
             }
 
-//            if(datePickers.size() <= i)
+            if(datePickers.size() <= i)
             {
                 datePickers.add(new DatePicker());
                 datePickers.get(i).setConverter(new StringConverter<>()
@@ -219,8 +231,13 @@ public class TodoListApplicationController
                 });
 
                 int finalI3 = i;
+
+                // Attach listener to current DatePicker
                 datePickers.get(i).valueProperty().addListener((observable, oldValue, newValue) ->
                         System.out.println("DatePicker " + finalI3 + ": " + newValue));
+
+                // Load date of current ListItem in TodoList to associated DatePicker
+                datePickers.get(i).valueProperty().set(todoList.getListItems().get(i).getDueDate());
             }
 //            TextField textField = new TextField();
 //            textField.setAlignment(Pos.CENTER);
