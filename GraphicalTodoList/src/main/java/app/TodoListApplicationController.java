@@ -81,10 +81,7 @@ public class TodoListApplicationController
     @FXML
     public void viewAllListItemsRadioMenuItemSelected(ActionEvent actionEvent)
     {
-        selectedFilterOption = listItemFilterOption.ALL;
-
-        // TODO: Make enum observable to avoid manual calls to updateDisplayedList
-        updateDisplayedList();
+//        selectedFilterOption = listItemFilterOption.ALL;
 
         // Get all listItems from currently displayed list
 
@@ -96,10 +93,8 @@ public class TodoListApplicationController
     @FXML
     public void viewIncompleteItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
     {
-        selectedFilterOption = listItemFilterOption.INCOMPLETE_ONLY;
+//        selectedFilterOption = listItemFilterOption.INCOMPLETE_ONLY;
 
-        // TODO: Make enum observable to avoid manual calls to updateDisplayedList
-        updateDisplayedList();
         // Get all incomplete listItems from currently displayed list
 
         // Generate GridPane from list items
@@ -110,10 +105,7 @@ public class TodoListApplicationController
     @FXML
     public void viewCompletedItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
     {
-        selectedFilterOption = listItemFilterOption.COMPLETE_ONLY;
-
-        // TODO: Make enum observable to avoid manual calls to updateDisplayedList
-        updateDisplayedList();
+//        selectedFilterOption = listItemFilterOption.COMPLETE_ONLY;
 
         // Get all completed listItems from currently displayed list
 
@@ -130,8 +122,6 @@ public class TodoListApplicationController
         // Open a FileChooser so the user can specify where the selected TodoLists should be saved
 
         // Save these TodoList objects to that file
-
-        System.out.println(todoList);
     }
 
     @FXML
@@ -155,7 +145,7 @@ public class TodoListApplicationController
         todoList = serializer.loadListFromFile(chosenFile);
 
         // Add new listener to list size
-//        todoList.getListSize().addListener((observable, oldValue, newValue) -> System.out.println(todoList.getListSize()));
+        // Previously created listener was invalidated by load operation
         todoList.getListSize().addListener((observable, oldValue, newValue) -> updateDisplayedList());
 
         clearGeneratedControls();
@@ -170,7 +160,6 @@ public class TodoListApplicationController
         datePickers.clear();
     }
 
-    // TODO: Add list selection parameter
     // TODO: Add sort list parameter
     private GridPane todoListToGridPane()
     {
@@ -356,8 +345,12 @@ public class TodoListApplicationController
 
         // Add listener to todoList to monitor for changes in size
         // Will be overwritten if the user loads a list.
-//        todoList.getListSize().addListener((observable, oldValue, newValue) -> System.out.println(todoList.getListSize()));
         todoList.getListSize().addListener((observable, oldValue, newValue) -> updateDisplayedList());
+
+        // Associate each view mode RadioMenuItem with the appropriate enum
+        viewAllItemsRadioMenuItem.setUserData(listItemFilterOption.ALL);
+        viewIncompleteItemsOnlyRadioMenuItem.setUserData(listItemFilterOption.INCOMPLETE_ONLY);
+        viewCompletedItemsOnlyRadioMenuItem.setUserData(listItemFilterOption.COMPLETE_ONLY);
 
         // Display all items by default
         selectedFilterOption = listItemFilterOption.ALL;
@@ -367,15 +360,16 @@ public class TodoListApplicationController
 
         // Add listener for title change to update title of todoList
         currentListTitleTextField.textProperty().addListener((observable, oldValue, newValue) ->
-        {
-            todoList.setTitle(newValue);
+                todoList.setTitle(newValue));
 
-//            System.out.println("List title = " + newValue);
-        });
-
-        // Add listener to listViewMode
+        // Add listener to listFilterOptionToggleGroup to convert currently selected filter mode menu item to enum
         listFilterOptionToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
-                                                                        updateDisplayedList());
+                {
+                    // Update selectedFilterOption
+                    selectedFilterOption = (listItemFilterOption) newValue.getUserData();
+
+                    updateDisplayedList();
+                });
     }
 
     @FXML
