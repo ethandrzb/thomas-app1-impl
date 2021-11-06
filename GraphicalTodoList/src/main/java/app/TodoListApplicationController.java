@@ -29,6 +29,10 @@ import java.util.ArrayList;
 
 public class TodoListApplicationController
 {
+    private enum listItemFilterOption {ALL, INCOMPLETE_ONLY, COMPLETE_ONLY}
+
+    private listItemFilterOption selectedFilterOption;
+
     private TodoList todoList;
     private final ArrayList<TextField> textFields = new ArrayList<>();
     private final ArrayList<CheckBox> checkBoxes = new ArrayList<>();
@@ -77,6 +81,11 @@ public class TodoListApplicationController
     @FXML
     public void viewAllListItemsRadioMenuItemSelected(ActionEvent actionEvent)
     {
+        selectedFilterOption = listItemFilterOption.ALL;
+
+        // TODO: Make enum observable to avoid manual calls to updateDisplayedList
+        updateDisplayedList();
+
         // Get all listItems from currently displayed list
 
         // Generate GridPane from list items
@@ -87,6 +96,10 @@ public class TodoListApplicationController
     @FXML
     public void viewIncompleteItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
     {
+        selectedFilterOption = listItemFilterOption.INCOMPLETE_ONLY;
+
+        // TODO: Make enum observable to avoid manual calls to updateDisplayedList
+        updateDisplayedList();
         // Get all incomplete listItems from currently displayed list
 
         // Generate GridPane from list items
@@ -97,6 +110,11 @@ public class TodoListApplicationController
     @FXML
     public void viewCompletedItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
     {
+        selectedFilterOption = listItemFilterOption.COMPLETE_ONLY;
+
+        // TODO: Make enum observable to avoid manual calls to updateDisplayedList
+        updateDisplayedList();
+
         // Get all completed listItems from currently displayed list
 
         // Generate GridPane from list items
@@ -164,6 +182,7 @@ public class TodoListApplicationController
 
         for(int i = 0; i<todoList.getAllListItems().size(); i++)
         {
+            // TODO: Move body of this if statement to separate method
             if(checkBoxes.size() <= i)
             {
                 checkBoxes.add(new CheckBox());
@@ -176,13 +195,14 @@ public class TodoListApplicationController
                 {
                     todoList.getListItem(finalI1).setItemCompleted(newValue);
 
-                    System.out.println("Checkbox " + finalI1 + ": " + newValue);
+//                    System.out.println("Checkbox " + finalI1 + ": " + newValue);
                 });
 
                 // Load completion of current ListItem in TodoList to associated CheckBox
                 checkBoxes.get(i).setSelected(todoList.getListItem(i).isItemCompleted());
             }
 
+            // TODO: Move body of this if statement to separate method
             if(textFields.size() <= i)
             {
                 textFields.add(new TextField());
@@ -208,7 +228,7 @@ public class TodoListApplicationController
                         // Update description of current ListItem
                         todoList.getListItem(finalI2).setDescription(textFields.get(finalI2).getText());
 
-                        System.out.println("TextField " + finalI2 + ": " + newValue);
+//                        System.out.println("TextField " + finalI2 + ": " + newValue);
                     }
                 });
 
@@ -216,6 +236,7 @@ public class TodoListApplicationController
                 textFields.get(i).setText(todoList.getListItem(i).getDescription());
             }
 
+            // TODO: Move body of this if statement to separate method
             if(datePickers.size() <= i)
             {
                 datePickers.add(new DatePicker());
@@ -250,7 +271,7 @@ public class TodoListApplicationController
                             // Update due date of current ListItem
                             todoList.getListItem(finalI3).setDueDate(datePickers.get(finalI3).getValue());
 
-                            System.out.println("DatePicker " + finalI3 + ": " + newValue);
+//                            System.out.println("DatePicker " + finalI3 + ": " + newValue);
                         });
 
                 // Load date of current ListItem in TodoList to associated DatePicker
@@ -273,18 +294,27 @@ public class TodoListApplicationController
 //            table.add(checkBox , 1, i);
 //            table.add(datePicker,2, i);
 
-            table.add(checkBoxes.get(i), 0, i);
-            table.add(textFields.get(i), 1, i);
-            table.add(datePickers.get(i), 2, i);
+            // Apply filter option
+            boolean addListItemToGridPane = switch(selectedFilterOption)
+                    {
+                        case ALL -> true;
+                        case INCOMPLETE_ONLY -> !todoList.getListItem(i).isItemCompleted();
+                        case COMPLETE_ONLY -> todoList.getListItem(i).isItemCompleted();
+                    };
 
-            // margins are up to your preference
-//            GridPane.setMargin(textField, new Insets(5));
-//            GridPane.setMargin(checkBox, new Insets(5));
-//            GridPane.setMargin(datePicker, new Insets(5));
+            // Only add current ListItem if permitted by filter
+            if(addListItemToGridPane)
+            {
+                // Add controls to GridPane
+                table.add(checkBoxes.get(i), 0, i);
+                table.add(textFields.get(i), 1, i);
+                table.add(datePickers.get(i), 2, i);
 
-            GridPane.setMargin(checkBoxes.get(i), new Insets(5));
-            GridPane.setMargin(textFields.get(i), new Insets(5));
-            GridPane.setMargin(datePickers.get(i), new Insets(5));
+                // Set margins between controls
+                GridPane.setMargin(checkBoxes.get(i), new Insets(5));
+                GridPane.setMargin(textFields.get(i), new Insets(5));
+                GridPane.setMargin(datePickers.get(i), new Insets(5));
+            }
         }
         table.setAlignment(Pos.CENTER);
 
@@ -329,13 +359,23 @@ public class TodoListApplicationController
 //        todoList.getListSize().addListener((observable, oldValue, newValue) -> System.out.println(todoList.getListSize()));
         todoList.getListSize().addListener((observable, oldValue, newValue) -> updateDisplayedList());
 
+        // Display all items by default
+        selectedFilterOption = listItemFilterOption.ALL;
+
+        // Display new list
         updateDisplayedList();
 
+        // Add listener for title change to update title of todoList
         currentListTitleTextField.textProperty().addListener((observable, oldValue, newValue) ->
         {
             todoList.setTitle(newValue);
-            System.out.println("List title = " + newValue);
+
+//            System.out.println("List title = " + newValue);
         });
+
+        // Add listener to listViewMode
+        listViewModeToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
+                                                                        updateDisplayedList());
     }
 
     @FXML
