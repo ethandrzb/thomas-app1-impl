@@ -64,7 +64,7 @@ public class TodoList
     public void removeListItem(int index)
     {
         // Remove listItem at index, if it exists
-        listItemsData.remove(index);
+//        listItemsData.remove(index);
         listItems.remove(index);
     }
 
@@ -73,7 +73,12 @@ public class TodoList
         return listSize;
     }
 
-    public List<ListItem> getListItems()
+    public ListItem getListItem(int index)
+    {
+        return listItemsData.get(index);
+    }
+
+    public List<ListItem> getAllListItems()
     {
         // return all listItems
         return listItems;

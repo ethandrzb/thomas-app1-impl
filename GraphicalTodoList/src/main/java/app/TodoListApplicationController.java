@@ -18,7 +18,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import logic.ApplicationStateSerializer;
-import logic.ListItem;
 import logic.TodoList;
 
 import java.io.File;
@@ -163,7 +162,7 @@ public class TodoListApplicationController
         // Debug statement used to track differences between size of list in todoList and SimpleIntegerProperty bound to it
 //        System.out.println(todoList.getListItems().size() + ", " + todoList.getListSize().getValue());
 
-        for(int i=0; i<todoList.getListItems().size(); i++)
+        for(int i = 0; i<todoList.getAllListItems().size(); i++)
         {
             if(checkBoxes.size() <= i)
             {
@@ -175,13 +174,13 @@ public class TodoListApplicationController
                 // Attach change listener to current checkbox to update the current ListItem's completed field.
                 checkBoxes.get(i).selectedProperty().addListener((observable, oldValue, newValue) ->
                 {
-                    todoList.getListItems().get(finalI1).setItemCompleted(newValue);
+                    todoList.getListItem(finalI1).setItemCompleted(newValue);
 
                     System.out.println("Checkbox " + finalI1 + ": " + newValue);
                 });
 
                 // Load completion of current ListItem in TodoList to associated CheckBox
-                checkBoxes.get(i).setSelected(todoList.getListItems().get(i).isItemCompleted());
+                checkBoxes.get(i).setSelected(todoList.getListItem(i).isItemCompleted());
             }
 
             if(textFields.size() <= i)
@@ -207,14 +206,14 @@ public class TodoListApplicationController
                         textFields.get(finalI2).setText(textFields.get(finalI2).getText().substring(0,newLength));
 
                         // Update description of current ListItem
-                        todoList.getListItems().get(finalI2).setDescription(textFields.get(finalI2).getText());
+                        todoList.getListItem(finalI2).setDescription(textFields.get(finalI2).getText());
 
                         System.out.println("TextField " + finalI2 + ": " + newValue);
                     }
                 });
 
                 // Load description of current ListItem in TodoList to associated TextField
-                textFields.get(i).setText(todoList.getListItems().get(i).getDescription());
+                textFields.get(i).setText(todoList.getListItem(i).getDescription());
             }
 
             if(datePickers.size() <= i)
@@ -249,13 +248,13 @@ public class TodoListApplicationController
                 datePickers.get(i).valueProperty().addListener((observable, oldValue, newValue) ->
                         {
                             // Update due date of current ListItem
-                            todoList.getListItems().get(finalI3).setDueDate(datePickers.get(finalI3).getValue());
+                            todoList.getListItem(finalI3).setDueDate(datePickers.get(finalI3).getValue());
 
                             System.out.println("DatePicker " + finalI3 + ": " + newValue);
                         });
 
                 // Load date of current ListItem in TodoList to associated DatePicker
-                datePickers.get(i).valueProperty().set(todoList.getListItems().get(i).getDueDate());
+                datePickers.get(i).valueProperty().set(todoList.getListItem(i).getDueDate());
             }
 //            TextField textField = new TextField();
 //            textField.setAlignment(Pos.CENTER);
