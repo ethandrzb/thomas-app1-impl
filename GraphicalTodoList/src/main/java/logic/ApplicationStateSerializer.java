@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 public class ApplicationStateSerializer
 {
-    public void saveListToFile(TodoList list, File file)
+    public void saveListToFile(TodoList list, File file) throws FileNotFoundException
     {
         // Item due date ---------------------------|
         // Item description ----------|             |
@@ -51,10 +51,11 @@ public class ApplicationStateSerializer
         catch (FileNotFoundException e)
         {
             System.err.println("Unable to create new file at " + file.getAbsolutePath());
+            throw new FileNotFoundException();
         }
     }
 
-    public TodoList loadListFromFile(File file)
+    public TodoList loadListFromFile(File file) throws FileNotFoundException
     {
         // Create buffer to store ListItems
         ArrayList<ListItem> buffer = new ArrayList<>();
@@ -83,9 +84,10 @@ public class ApplicationStateSerializer
                 buffer.add(convertStringToListItem(fromFile.nextLine()));
             }
         }
-        catch(FileNotFoundException e)
+        catch (FileNotFoundException e)
         {
             System.err.println("Unable to open file at " + file.getAbsolutePath());
+            throw new FileNotFoundException();
         }
 
         return new TodoList(title, buffer);

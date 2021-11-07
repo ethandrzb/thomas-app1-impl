@@ -20,13 +20,12 @@ import logic.ListItem;
 import logic.TodoList;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 // TODO: Remove title function from todoList
-// TODO: Remove all debugging print statements
-// TODO: Display error dialog box when save/load fails
 
 public class TodoListApplicationController
 {
@@ -38,6 +37,9 @@ public class TodoListApplicationController
 
     private final Alert emptyItemDescriptionExistsOnAddAlert = new Alert(Alert.AlertType.ERROR);
     private final Alert emptyItemDescriptionExistsOnSaveListAlert = new Alert(Alert.AlertType.ERROR);
+    private final Alert failedToSaveListAlert = new Alert(Alert.AlertType.ERROR);
+    private final Alert failedToLoadListAlert = new Alert(Alert.AlertType.ERROR);
+
     private static final String TEXT_FIELD_ERROR_BORDER_STYLE_NAME = "error";
 
     private TodoList todoList;
@@ -141,7 +143,14 @@ public class TodoListApplicationController
             }
 
             // Load list from file
-            serializer.saveListToFile(todoList, chosenFile);
+            try
+            {
+                serializer.saveListToFile(todoList, chosenFile);
+            }
+            catch(FileNotFoundException e)
+            {
+                failedToSaveListAlert.show();
+            }
         }
         else
         {
@@ -168,8 +177,15 @@ public class TodoListApplicationController
             return;
         }
 
-        // Load list from file
-        todoList = serializer.loadListFromFile(chosenFile);
+        // Attempt to list from file
+        try
+        {
+            todoList = serializer.loadListFromFile(chosenFile);
+        }
+        catch(FileNotFoundException e)
+        {
+            failedToLoadListAlert.show();
+        }
 
         // Add new listener to list size
         // Previously created listener was invalidated by load operation
@@ -415,20 +431,9 @@ public class TodoListApplicationController
     @FXML
     public void initialize()
     {
-        todoList = new TodoList();
+        initWithEmptyList();
 
-        // Add listener to todoList to monitor for changes in size
-        // Will be overwritten if the user loads a list.
-        todoList.getListSize().addListener((observable, oldValue, newValue) -> updateDisplayedList());
-
-        // Associate each view mode RadioMenuItem with the appropriate enum
-        viewAllItemsRadioMenuItem.setUserData(listItemFilterOption.ALL);
-        viewIncompleteItemsOnlyRadioMenuItem.setUserData(listItemFilterOption.INCOMPLETE_ONLY);
-        viewCompletedItemsOnlyRadioMenuItem.setUserData(listItemFilterOption.COMPLETE_ONLY);
-
-        // Associate each sort mode RadioMenuItem with the appropriate enum
-        sortByDateAddedRadioMenuItem.setUserData(sortListOption.BY_DATE_ADDED);
-        sortByDueDateRadioMenuItem.setUserData(sortListOption.BY_DUE_DATE);
+        initRadioMenuItemEnums();
 
         // Display all items by default
         selectedFilterOption = listItemFilterOption.ALL;
@@ -443,30 +448,62 @@ public class TodoListApplicationController
         currentListTitleTextField.textProperty().addListener((observable, oldValue, newValue) ->
                 todoList.setTitle(newValue));
 
+        initToggleGroupChangeListeners();
+
+        initAlertBoxes();
+    }
+
+    private void initWithEmptyList()
+    {
+        todoList = new TodoList();
+
+        // Add listener to todoList to monitor for changes in size
+        // Will be overwritten if the user loads a list.
+        todoList.getListSize().addListener((observable, oldValue, newValue) -> updateDisplayedList());
+    }
+
+    private void initToggleGroupChangeListeners()
+    {
         // Add listener to listFilterOptionToggleGroup to convert currently selected filter mode menu item to enum
         listFilterOptionToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
-                {
-                    // Update selectedFilterOption
-                    selectedFilterOption = (listItemFilterOption) newValue.getUserData();
+        {
+            // Update selectedFilterOption
+            selectedFilterOption = (listItemFilterOption) newValue.getUserData();
 
-                    updateDisplayedList();
-                });
+            updateDisplayedList();
+        });
 
         // Add listener to sortOptionToggleGroup to convert currently selected sort mode menu item to enum
         sortOptionToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) ->
-                {
-                    // Update selectedSortOption
-                    selectedSortOption = (sortListOption) newValue.getUserData();
+        {
+            // Update selectedSortOption
+            selectedSortOption = (sortListOption) newValue.getUserData();
 
-                    updateDisplayedList();
-                }));
+            updateDisplayedList();
+        }));
+    }
 
+    private void initRadioMenuItemEnums()
+    {
+        // Associate each view mode RadioMenuItem with the appropriate enum
+        viewAllItemsRadioMenuItem.setUserData(listItemFilterOption.ALL);
+        viewIncompleteItemsOnlyRadioMenuItem.setUserData(listItemFilterOption.INCOMPLETE_ONLY);
+        viewCompletedItemsOnlyRadioMenuItem.setUserData(listItemFilterOption.COMPLETE_ONLY);
+
+        // Associate each sort mode RadioMenuItem with the appropriate enum
+        sortByDateAddedRadioMenuItem.setUserData(sortListOption.BY_DATE_ADDED);
+        sortByDueDateRadioMenuItem.setUserData(sortListOption.BY_DUE_DATE);
+    }
+
+    private void initAlertBoxes()
+    {
         // Set title for empty description alert box on add
         emptyItemDescriptionExistsOnAddAlert.setTitle("Unable to add new item");
 
         // Set content for empty description alert box
         emptyItemDescriptionExistsOnAddAlert.setContentText("All items must have a non-empty description" +
-                                                        " before a new item can be added.");
+                " before a new item can be added.");
+
 
         // Set title for empty description alert box on save
         emptyItemDescriptionExistsOnSaveListAlert.setTitle("Unable to save list");
@@ -474,5 +511,19 @@ public class TodoListApplicationController
         // Set content for empty description alert box
         emptyItemDescriptionExistsOnSaveListAlert.setContentText("All items must have a non-empty description" +
                 " before the list can be saved to a file.");
+
+
+        // Set title for list export failure alert box
+        failedToSaveListAlert.setTitle("Failed to save list");
+
+        // Set content for list export failure alert box
+        failedToSaveListAlert.setContentText("Save operation failed. Try again.");
+
+
+        // Set title for list import failure alert box
+        failedToLoadListAlert.setTitle("Failed to load list");
+
+        // Set content for list import failure alert box
+        failedToLoadListAlert.setContentText("Load operation failed. Try again.");
     }
 }
