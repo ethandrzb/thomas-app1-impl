@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import logic.ApplicationStateSerializer;
+import logic.ListItem;
 import logic.TodoList;
 
 import java.io.File;
@@ -24,6 +25,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 // TODO: Remove all debugging print statements
 // TODO: Display error dialog box when save/load fails
@@ -37,10 +39,10 @@ public class TodoListApplicationController
     private static final String TEXT_FIELD_ERROR_BORDER_STYLE_NAME = "error";
 
     private TodoList todoList;
-    private final ArrayList<TextField> textFields = new ArrayList<>();
-    private final ArrayList<CheckBox> checkBoxes = new ArrayList<>();
-    private final ArrayList<DatePicker> datePickers = new ArrayList<>();
-    private final ArrayList<Button> removeButtons = new ArrayList<>();
+    private final HashMap<ListItem, TextField> textFields = new HashMap<>();
+    private final HashMap<ListItem, CheckBox> checkBoxes = new HashMap<>();
+    private final HashMap<ListItem, DatePicker> datePickers = new HashMap<>();
+    private final HashMap<ListItem, Button> removeButtons = new HashMap<>();
 
     @FXML
     private Button addItemButton;
@@ -101,8 +103,8 @@ public class TodoListApplicationController
         {
             if(todoList.getAllListItems().get(i).getDescription().isEmpty())
             {
-                // Apply error border to empty textfield
-                applyTextFieldErrorBorder(textFields.get(i));
+                // Apply error border to empty TextField
+                applyTextFieldErrorBorder(textFields.get(todoList.getAllListItems().get(i)));
 
                 allItemDescriptionsNonEmpty = false;
             }
@@ -114,11 +116,15 @@ public class TodoListApplicationController
     @FXML
     public void saveSelectedListsMenuItemSelected(ActionEvent actionEvent)
     {
+        // Validate that all item descriptions are non-empty
+
         // Get list of currently selected items in ListView
 
         // Open a FileChooser so the user can specify where the selected TodoLists should be saved
 
         // Save these TodoList objects to that file
+
+        System.out.println(todoList);
     }
 
     @FXML
@@ -155,6 +161,7 @@ public class TodoListApplicationController
         checkBoxes.clear();
         textFields.clear();
         datePickers.clear();
+        removeButtons.clear();
     }
 
     // TODO: Add sort list parameter
@@ -164,20 +171,22 @@ public class TodoListApplicationController
 
         for(int i = 0; i < todoList.getAllListItems().size(); i++)
         {
+            ListItem currentItem = todoList.getAllListItems().get(i);
+
             // Make new control objects, if necessary
             if(checkBoxes.size() <= i)
             {
-                addCheckBox(i);
+                addCheckBox(currentItem);
             }
 
             if(textFields.size() <= i)
             {
-                addTextField(i);
+                addTextField(currentItem);
             }
 
             if(datePickers.size() <= i)
             {
-                addDatePicker(i);
+                addDatePicker(currentItem);
             }
 
             if(removeButtons.size() <= i)
@@ -185,12 +194,11 @@ public class TodoListApplicationController
                 // TODO: Move body of this if statement to a separate method to match the other controls in the GridPane
 //                addRemoveButton(i);
 
-                removeButtons.add(new Button("Remove"));
+                removeButtons.put(currentItem, new Button("Remove"));
 
                 // TODO: Add remove button functionality
                 int finalI = i;
 //                removeButtons.get(i).pressedProperty().addListener((observable, oldValue, newValue) -> removeItem(finalI));
-
             }
 
             // Apply filter option
@@ -205,16 +213,16 @@ public class TodoListApplicationController
             if(addListItemToGridPane)
             {
                 // Add controls to GridPane
-                table.add(checkBoxes.get(i), 0, i);
-                table.add(textFields.get(i), 1, i);
-                table.add(datePickers.get(i), 2, i);
-                table.add(removeButtons.get(i), 3, i);
+                table.add(checkBoxes.get(currentItem), 0, i);
+                table.add(textFields.get(currentItem), 1, i);
+                table.add(datePickers.get(currentItem), 2, i);
+                table.add(removeButtons.get(currentItem), 3, i);
 
                 // Set margins between controls
-                GridPane.setMargin(checkBoxes.get(i), new Insets(5));
-                GridPane.setMargin(textFields.get(i), new Insets(5));
-                GridPane.setMargin(datePickers.get(i), new Insets(5));
-                GridPane.setMargin(removeButtons.get(i), new Insets(5));
+                GridPane.setMargin(checkBoxes.get(currentItem), new Insets(5));
+                GridPane.setMargin(textFields.get(currentItem), new Insets(5));
+                GridPane.setMargin(datePickers.get(currentItem), new Insets(5));
+                GridPane.setMargin(removeButtons.get(currentItem), new Insets(5));
             }
         }
         table.setAlignment(Pos.CENTER);
@@ -222,41 +230,28 @@ public class TodoListApplicationController
         return table;
     }
 
-//    // Removes the item at index from both the GUI and todoList object
-//    private void removeItem(int index)
-//    {
-//        checkBoxes.remove(index);
-//        textFields.remove(index);
-//        datePickers.remove(index);
-//        removeButtons.remove(index);
-//
-//        todoList.removeListItem(index);
-//
-//        updateDisplayedList();
-//    }
-
-    private void addCheckBox(int index)
+    private void addCheckBox(ListItem item)
     {
-        checkBoxes.add(new CheckBox());
-        checkBoxes.get(index).setTextFill(Color.WHITE);
-        checkBoxes.get(index).setAlignment(Pos.CENTER);
+        checkBoxes.put(item, new CheckBox());
+        checkBoxes.get(item).setTextFill(Color.WHITE);
+        checkBoxes.get(item).setAlignment(Pos.CENTER);
 
         // Attach change listener to current checkbox to update the current ListItem's completed field.
-        checkBoxes.get(index).selectedProperty().addListener((observable, oldValue, newValue) ->
-            todoList.getListItem(index).setItemCompleted(newValue)
+        checkBoxes.get(item).selectedProperty().addListener((observable, oldValue, newValue) ->
+                item.setItemCompleted(newValue)
         );
 
         // Load completion of current ListItem in TodoList to associated CheckBox
-        checkBoxes.get(index).setSelected(todoList.getListItem(index).isItemCompleted());
+        checkBoxes.get(item).setSelected(item.isItemCompleted());
     }
 
-    private void addTextField(int index)
+    private void addTextField(ListItem item)
     {
-        textFields.add(new TextField());
-        textFields.get(index).setAlignment(Pos.CENTER);
+        textFields.put(item, new TextField());
+        textFields.get(item).setAlignment(Pos.CENTER);
 
         // Attach listener to current TextField
-        textFields.get(index).textProperty().addListener((observable, oldValue, newValue) ->
+        textFields.get(item).textProperty().addListener((observable, oldValue, newValue) ->
         {
             int maxLength = 256;
             int newLength = Math.min(newValue.length(), maxLength);
@@ -264,29 +259,29 @@ public class TodoListApplicationController
             // Only change description stored in todoList if description is non-empty
             if (newLength != 0)
             {
-                removeTextFieldErrorBorder(textFields.get(index));
+                removeTextFieldErrorBorder(textFields.get(item));
 
                 // Truncate input string to fit in length limit
-                textFields.get(index).setText(textFields.get(index).getText().substring(0, newLength));
+                textFields.get(item).setText(textFields.get(item).getText().substring(0, newLength));
 
                 // Update description of current ListItem
-                todoList.getListItem(index).setDescription(textFields.get(index).getText());
+                item.setDescription(textFields.get(item).getText());
             }
             // Apply red border if description is empty
             else
             {
-                applyTextFieldErrorBorder(textFields.get(index));
+                applyTextFieldErrorBorder(textFields.get(item));
             }
         });
 
         // Load description of current ListItem in TodoList to associated TextField
-        textFields.get(index).setText(todoList.getListItem(index).getDescription());
+        textFields.get(item).setText(item.getDescription());
     }
 
-    private void addDatePicker(int index)
+    private void addDatePicker(ListItem item)
     {
-        datePickers.add(new DatePicker());
-        datePickers.get(index).setConverter(new StringConverter<>()
+        datePickers.put(item, new DatePicker());
+        datePickers.get(item).setConverter(new StringConverter<>()
         {
             final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -310,13 +305,13 @@ public class TodoListApplicationController
         });
 
         // Attach listener to current DatePicker
-        datePickers.get(index).valueProperty().addListener((observable, oldValue, newValue) ->
+        datePickers.get(item).valueProperty().addListener((observable, oldValue, newValue) ->
             // Update due date of current ListItem
-            todoList.getListItem(index).setDueDate(datePickers.get(index).getValue())
+                item.setDueDate(datePickers.get(item).getValue())
         );
 
         // Load date of current ListItem in TodoList to associated DatePicker
-        datePickers.get(index).valueProperty().set(todoList.getListItem(index).getDueDate());
+        datePickers.get(item).valueProperty().set(item.getDueDate());
     }
 
     private void applyTextFieldErrorBorder(TextField tf)
@@ -395,6 +390,10 @@ public class TodoListApplicationController
     @FXML
     public void clearListMenuItemSelected(ActionEvent actionEvent)
     {
+        // Clear title
+        currentListTitleTextField.setText("");
+
+        // Clear list
         clearGeneratedControls();
         todoList.clear(); 
         updateDisplayedList();
