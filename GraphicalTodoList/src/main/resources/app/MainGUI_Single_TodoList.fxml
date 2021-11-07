@@ -43,7 +43,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
             <items>
-              <MenuItem fx:id="clearListMenuItem" mnemonicParsing="false" onAction="#clearListMenuItemSelected" text="Clear list" />
+              <MenuItem mnemonicParsing="false" onAction="#clearListMenuItemSelected" text="Clear list" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="View">

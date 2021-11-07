@@ -59,9 +59,6 @@ public class TodoListApplicationController
     private MenuItem saveSelectedListsMenuItem;
 
     @FXML
-    public MenuItem clearListMenuItem;
-
-    @FXML
     private ToggleGroup sortOptionToggleGroup;
 
     @FXML
@@ -98,7 +95,8 @@ public class TodoListApplicationController
         }
     }
 
-    // Returns false if todoList contains an item with an empty description field.
+    // Highlights empty description fields.
+    // Returns false if any highlights were applied
     // Otherwise, returns true.
     private boolean validateAllItemDescriptionsNonEmpty()
     {
@@ -128,11 +126,13 @@ public class TodoListApplicationController
 
             // Open a FileChooser so the user can specify to where the TodoLists should be saved
             FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
             // Set default file name to title of currently loaded list if the title is non-empty
 
-            File chosenFile = fileChooser.showSaveDialog(saveSelectedListsMenuItem.getParentPopup().getScene().getWindow());
+            File chosenFile = fileChooser.showSaveDialog(
+                    saveSelectedListsMenuItem.getParentPopup().getScene().getWindow());
 
             // User closed FileChooser without specifying a path to a new file
             if(chosenFile == null)
@@ -157,7 +157,8 @@ public class TodoListApplicationController
 
         // Open a FileChooser so the user can specify from where the TodoLists should be loaded
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
         File chosenFile = fileChooser.showOpenDialog(loadListsMenuItem.getParentPopup().getScene().getWindow());
 
@@ -176,6 +177,18 @@ public class TodoListApplicationController
 
         clearGeneratedControls();
 
+        updateDisplayedList();
+    }
+
+    @FXML
+    public void clearListMenuItemSelected()
+    {
+        // Clear title
+        currentListTitleTextField.setText("");
+
+        // Clear list
+        clearGeneratedControls();
+        todoList.clear();
         updateDisplayedList();
     }
 
@@ -461,17 +474,5 @@ public class TodoListApplicationController
         // Set content for empty description alert box
         emptyItemDescriptionExistsOnSaveListAlert.setContentText("All items must have a non-empty description" +
                 " before the list can be saved to a file.");
-    }
-
-    @FXML
-    public void clearListMenuItemSelected()
-    {
-        // Clear title
-        currentListTitleTextField.setText("");
-
-        // Clear list
-        clearGeneratedControls();
-        todoList.clear(); 
-        updateDisplayedList();
     }
 }
