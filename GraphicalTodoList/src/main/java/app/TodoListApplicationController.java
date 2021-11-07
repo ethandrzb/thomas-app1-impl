@@ -5,8 +5,6 @@
 
 package app;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,7 +34,7 @@ public class TodoListApplicationController
     private listItemFilterOption selectedFilterOption;
 
     private final Alert emptyItemDescriptionExistsAlert = new Alert(Alert.AlertType.ERROR);
-    private final String textFieldErrorBorderStyleName = "error";
+    private static final String TEXT_FIELD_ERROR_BORDER_STYLE_NAME = "error";
 
     private TodoList todoList;
     private final ArrayList<TextField> textFields = new ArrayList<>();
@@ -296,9 +294,9 @@ public class TodoListApplicationController
     {
         ObservableList<String> styleClass = tf.getStyleClass();
 
-        if(!styleClass.contains(textFieldErrorBorderStyleName))
+        if(!styleClass.contains(TEXT_FIELD_ERROR_BORDER_STYLE_NAME))
         {
-            styleClass.add(textFieldErrorBorderStyleName);
+            styleClass.add(TEXT_FIELD_ERROR_BORDER_STYLE_NAME);
         }
     }
 
@@ -306,7 +304,7 @@ public class TodoListApplicationController
     {
         ObservableList<String> styleClass = tf.getStyleClass();
 
-        styleClass.removeAll(Collections.singleton(textFieldErrorBorderStyleName));
+        styleClass.removeAll(Collections.singleton(TEXT_FIELD_ERROR_BORDER_STYLE_NAME));
     }
 
     private void updateDisplayedList()
