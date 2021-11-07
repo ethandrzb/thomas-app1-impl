@@ -16,7 +16,7 @@ public class ListItem
     public ListItem()
     {
         itemCompleted = false;
-        description = "";
+        description = "Description";
         dueDate = null;
     }
 

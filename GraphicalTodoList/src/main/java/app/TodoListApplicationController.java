@@ -258,25 +258,25 @@ public class TodoListApplicationController
         // Attach listener to current TextField
         textFields.get(index).textProperty().addListener((observable, oldValue, newValue) ->
         {
-            // TODO: Change maxLength to 256
-            int maxLength = 10;
+            int maxLength = 256;
             int newLength = Math.min(newValue.length(), maxLength);
 
-            // Highlight TextField if empty
-            if(newLength == 0)
+            // Only change description stored in todoList if description is non-empty
+            if (newLength != 0)
+            {
+                removeTextFieldErrorBorder(textFields.get(index));
+
+                // Truncate input string to fit in length limit
+                textFields.get(index).setText(textFields.get(index).getText().substring(0, newLength));
+
+                // Update description of current ListItem
+                todoList.getListItem(index).setDescription(textFields.get(index).getText());
+            }
+            // Apply red border if description is empty
+            else
             {
                 applyTextFieldErrorBorder(textFields.get(index));
             }
-            else
-            {
-                removeTextFieldErrorBorder(textFields.get(index));
-            }
-
-            // Truncate input string to fit in length limit
-            textFields.get(index).setText(textFields.get(index).getText().substring(0, newLength));
-
-            // Update description of current ListItem
-            todoList.getListItem(index).setDescription(textFields.get(index).getText());
         });
 
         // Load description of current ListItem in TodoList to associated TextField
