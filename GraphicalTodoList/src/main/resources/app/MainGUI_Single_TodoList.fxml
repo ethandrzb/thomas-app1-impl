@@ -59,7 +59,7 @@
                         <RadioMenuItem fx:id="viewCompletedItemsOnlyRadioMenuItem" mnemonicParsing="false" text="Completed items" toggleGroup="$listFilterOptionToggleGroup" />
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Sort by (TODO)">
+                  <Menu mnemonicParsing="false" text="Sort by">
                     <items>
                         <RadioMenuItem fx:id="sortByDateAddedRadioMenuItem" mnemonicParsing="false" selected="true" text="Sort by Date Added">
                            <toggleGroup>
@@ -71,11 +71,6 @@
                   </Menu>
                </items>
             </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
         </menus>
       </MenuBar>
    </top>
