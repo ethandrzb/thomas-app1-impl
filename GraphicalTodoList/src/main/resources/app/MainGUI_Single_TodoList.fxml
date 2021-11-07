@@ -23,7 +23,7 @@
                      <content>
                         <VBox fx:id="listContainerVBox" maxWidth="1.7976931348623157E308" prefHeight="352.0" prefWidth="753.0" />
                      </content></ScrollPane>
-                  <Button fx:id="addItemButton" alignment="CENTER" mnemonicParsing="false" onAction="#addNewItemButtonPressed" text="Add Item" />
+                  <Button alignment="CENTER" mnemonicParsing="false" onAction="#addNewItemButtonPressed" text="Add Item" />
                </children>
                <padding>
                   <Insets bottom="5.0" top="5.0" />

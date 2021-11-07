@@ -6,7 +6,6 @@
 package app;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,7 +22,6 @@ import logic.TodoList;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -43,9 +41,6 @@ public class TodoListApplicationController
     private final HashMap<ListItem, CheckBox> checkBoxes = new HashMap<>();
     private final HashMap<ListItem, DatePicker> datePickers = new HashMap<>();
     private final HashMap<ListItem, Button> removeButtons = new HashMap<>();
-
-    @FXML
-    private Button addItemButton;
 
     @FXML
     private TextField currentListTitleTextField;
@@ -78,7 +73,7 @@ public class TodoListApplicationController
     private VBox listContainerVBox;
 
     @FXML
-    public void addNewItemButtonPressed(ActionEvent actionEvent)
+    public void addNewItemButtonPressed()
     {
         // TODO: Display dialog box to alert user that there exists an item with an empty description.
         // Check if most recently added item has a non-empty description
@@ -114,7 +109,7 @@ public class TodoListApplicationController
     }
 
     @FXML
-    public void saveSelectedListsMenuItemSelected(ActionEvent actionEvent)
+    public void saveSelectedListsMenuItemSelected()
     {
         // Validate that all item descriptions are non-empty
 
@@ -128,7 +123,7 @@ public class TodoListApplicationController
     }
 
     @FXML
-    public void loadListsMenuItemSelected(ActionEvent actionEvent)
+    public void loadListsMenuItemSelected()
     {
         ApplicationStateSerializer serializer = new ApplicationStateSerializer();
 
@@ -397,7 +392,7 @@ public class TodoListApplicationController
     }
 
     @FXML
-    public void clearListMenuItemSelected(ActionEvent actionEvent)
+    public void clearListMenuItemSelected()
     {
         // Clear title
         currentListTitleTextField.setText("");
