@@ -12,10 +12,10 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefWidth="755.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.TodoListApplicationController">
+<BorderPane prefHeight="456.0" prefWidth="474.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.TodoListApplicationController">
    <center>
-      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="755.0">
-         <right>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="452.0">
+         <center>
             <VBox alignment="TOP_CENTER" prefHeight="431.0" prefWidth="792.0" spacing="5.0" BorderPane.alignment="CENTER">
                <children>
                   <TextField fx:id="currentListTitleTextField" promptText="List Title" />
@@ -29,7 +29,7 @@
                   <Insets bottom="5.0" top="5.0" />
                </padding>
             </VBox>
-         </right>
+         </center>
       </BorderPane>
    </center>
    <top>
