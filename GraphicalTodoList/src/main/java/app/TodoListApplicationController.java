@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+// TODO: Remove title function from todoList
 // TODO: Remove all debugging print statements
 // TODO: Display error dialog box when save/load fails
 
@@ -225,7 +226,11 @@ public class TodoListApplicationController
                 addRemoveButton(currentItem);
             }
 
-            // TODO: Find race condition or other source of error that would cause one of the control object maps to return null
+            // Make sure all maps contain the item and clear list/restart if they don't
+            if(!allControlsPresent(currentItem))
+            {
+                resetTodoListToGridPane();
+            }
 
             // Add controls to GridPane
             table.add(checkBoxes.get(currentItem), 0, i);
@@ -242,6 +247,23 @@ public class TodoListApplicationController
         table.setAlignment(Pos.CENTER);
 
         return table;
+    }
+
+    // Makes sure all control object maps contain a control for item
+    // Used to prevent race conditions
+    private boolean allControlsPresent(ListItem item)
+    {
+        return checkBoxes.containsKey(item)
+                && textFields.containsKey(item)
+                && datePickers.containsKey(item)
+                && removeButtons.containsKey(item);
+    }
+
+    // Attempts to fix state if todoList and the control object maps get de-synced
+    private void resetTodoListToGridPane()
+    {
+        clearGeneratedControls();
+        updateDisplayedList();
     }
 
     private void addCheckBox(ListItem item)
