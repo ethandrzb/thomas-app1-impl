@@ -47,9 +47,6 @@ public class TodoListApplicationController
     private final HashMap<ListItem, Button> removeButtons = new HashMap<>();
 
     @FXML
-    private TextField currentListTitleTextField;
-
-    @FXML
     private ToggleGroup listFilterOptionToggleGroup;
 
     @FXML
@@ -197,12 +194,11 @@ public class TodoListApplicationController
     @FXML
     public void clearListMenuItemSelected()
     {
-        // Clear title
-        currentListTitleTextField.setText("");
-
         // Clear list
         clearGeneratedControls();
         todoList.clear();
+
+        // Update GUI to reflect changes
         updateDisplayedList();
     }
 
