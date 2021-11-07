@@ -33,9 +33,10 @@ import java.util.Collections;
 public class TodoListApplicationController
 {
     private enum listItemFilterOption {ALL, INCOMPLETE_ONLY, COMPLETE_ONLY}
-    private String textFieldErrorBorderStyleName = "error";
-
     private listItemFilterOption selectedFilterOption;
+
+    private final Alert emptyItemDescriptionExistsAlert = new Alert(Alert.AlertType.ERROR);
+    private final String textFieldErrorBorderStyleName = "error";
 
     private TodoList todoList;
     private final ArrayList<TextField> textFields = new ArrayList<>();
@@ -84,6 +85,10 @@ public class TodoListApplicationController
         {
             // Add new item to this TodoList
             todoList.addItemToList();
+        }
+        else
+        {
+            emptyItemDescriptionExistsAlert.show();
         }
     }
 
@@ -351,6 +356,13 @@ public class TodoListApplicationController
 
                     updateDisplayedList();
                 });
+
+        // Set title for empty description alert box
+        emptyItemDescriptionExistsAlert.setTitle("Unable to add new item");
+
+        // Set content for empty description alert box
+        emptyItemDescriptionExistsAlert.setContentText("All items must have a non-empty description" +
+                                                        " before a new item can be added.");
     }
 
     @FXML
