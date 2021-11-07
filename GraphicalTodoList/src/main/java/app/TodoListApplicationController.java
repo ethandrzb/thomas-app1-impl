@@ -40,6 +40,7 @@ public class TodoListApplicationController
     private final ArrayList<TextField> textFields = new ArrayList<>();
     private final ArrayList<CheckBox> checkBoxes = new ArrayList<>();
     private final ArrayList<DatePicker> datePickers = new ArrayList<>();
+    private final ArrayList<Button> removeButtons = new ArrayList<>();
 
     @FXML
     private Button addItemButton;
@@ -179,6 +180,19 @@ public class TodoListApplicationController
                 addDatePicker(i);
             }
 
+            if(removeButtons.size() <= i)
+            {
+                // TODO: Move body of this if statement to a separate method to match the other controls in the GridPane
+//                addRemoveButton(i);
+
+                removeButtons.add(new Button("Remove"));
+
+                // TODO: Add remove button functionality
+                int finalI = i;
+//                removeButtons.get(i).pressedProperty().addListener((observable, oldValue, newValue) -> removeItem(finalI));
+
+            }
+
             // Apply filter option
             boolean addListItemToGridPane = switch(selectedFilterOption)
                     {
@@ -194,17 +208,32 @@ public class TodoListApplicationController
                 table.add(checkBoxes.get(i), 0, i);
                 table.add(textFields.get(i), 1, i);
                 table.add(datePickers.get(i), 2, i);
+                table.add(removeButtons.get(i), 3, i);
 
                 // Set margins between controls
                 GridPane.setMargin(checkBoxes.get(i), new Insets(5));
                 GridPane.setMargin(textFields.get(i), new Insets(5));
                 GridPane.setMargin(datePickers.get(i), new Insets(5));
+                GridPane.setMargin(removeButtons.get(i), new Insets(5));
             }
         }
         table.setAlignment(Pos.CENTER);
 
         return table;
     }
+
+//    // Removes the item at index from both the GUI and todoList object
+//    private void removeItem(int index)
+//    {
+//        checkBoxes.remove(index);
+//        textFields.remove(index);
+//        datePickers.remove(index);
+//        removeButtons.remove(index);
+//
+//        todoList.removeListItem(index);
+//
+//        updateDisplayedList();
+//    }
 
     private void addCheckBox(int index)
     {
