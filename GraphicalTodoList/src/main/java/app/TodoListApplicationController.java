@@ -33,6 +33,9 @@ public class TodoListApplicationController
     private enum listItemFilterOption {ALL, INCOMPLETE_ONLY, COMPLETE_ONLY}
     private listItemFilterOption selectedFilterOption;
 
+    private enum sortListOption {BY_DATE_ADDED, BY_DUE_DATE}
+    private sortListOption selectedSortOption;
+
     private final Alert emptyItemDescriptionExistsOnAddAlert = new Alert(Alert.AlertType.ERROR);
     private final Alert emptyItemDescriptionExistsOnSaveListAlert = new Alert(Alert.AlertType.ERROR);
     private static final String TEXT_FIELD_ERROR_BORDER_STYLE_NAME = "error";
@@ -69,6 +72,12 @@ public class TodoListApplicationController
 
     @FXML
     private RadioMenuItem viewIncompleteItemsOnlyRadioMenuItem;
+
+    @FXML
+    private RadioMenuItem sortByDateAddedRadioMenuItem;
+
+    @FXML
+    private RadioMenuItem sortByDueDateRadioMenuItem;
 
     @FXML
     private VBox listContainerVBox;
@@ -380,8 +389,15 @@ public class TodoListApplicationController
         viewIncompleteItemsOnlyRadioMenuItem.setUserData(listItemFilterOption.INCOMPLETE_ONLY);
         viewCompletedItemsOnlyRadioMenuItem.setUserData(listItemFilterOption.COMPLETE_ONLY);
 
+        // Associate each sort mode RadioMenuItem with the appropriate enum
+        sortByDateAddedRadioMenuItem.setUserData(sortListOption.BY_DATE_ADDED);
+        sortByDueDateRadioMenuItem.setUserData(sortListOption.BY_DUE_DATE);
+
         // Display all items by default
         selectedFilterOption = listItemFilterOption.ALL;
+
+        // Sort by date added by default
+        selectedSortOption = sortListOption.BY_DATE_ADDED;
 
         // Display new list
         updateDisplayedList();
@@ -398,6 +414,15 @@ public class TodoListApplicationController
 
                     updateDisplayedList();
                 });
+
+        // Add listener to sortOptionToggleGroup to convert currently selected sort mode menu item to enum
+        sortOptionToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) ->
+                {
+                    // Update selectedSortOption
+                    selectedSortOption = (sortListOption) newValue.getUserData();
+
+                    updateDisplayedList();
+                }));
 
         // Set title for empty description alert box on add
         emptyItemDescriptionExistsOnAddAlert.setTitle("Unable to add new item");

@@ -61,12 +61,12 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Sort by (TODO)">
                     <items>
-                        <RadioMenuItem mnemonicParsing="false" selected="true" text="Sort by Date Added">
+                        <RadioMenuItem fx:id="sortByDateAddedRadioMenuItem" mnemonicParsing="false" selected="true" text="Sort by Date Added">
                            <toggleGroup>
                               <ToggleGroup fx:id="sortOptionToggleGroup" />
                            </toggleGroup>
                         </RadioMenuItem>
-                        <RadioMenuItem mnemonicParsing="false" text="Sort by Due Date" toggleGroup="$sortOptionToggleGroup" />
+                        <RadioMenuItem fx:id="sortByDueDateRadioMenuItem" mnemonicParsing="false" text="Sort by Due Date" toggleGroup="$sortOptionToggleGroup" />
                     </items>
                   </Menu>
                </items>
