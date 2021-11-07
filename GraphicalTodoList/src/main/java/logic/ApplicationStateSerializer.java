@@ -28,9 +28,6 @@ public class ApplicationStateSerializer
         // Attempt to create new file at filePath
         try(Formatter output = new Formatter(file))
         {
-            // Write list title to file
-//            output.format("Title: %s%n", list.getTitle());
-
             // For each item in list
             for(ListItem item : list.getAllListItems(false))
             {
@@ -61,22 +58,9 @@ public class ApplicationStateSerializer
         // Create buffer to store ListItems
         ArrayList<ListItem> buffer = new ArrayList<>();
 
-//        String title;
-
         // Attempt to load file at filePath
         try(Scanner fromFile = new Scanner(file))
         {
-            // Get list title
-//            title = fromFile.nextLine();
-//            if(title.startsWith("Title: "))
-//            {
-//                // Remove "Title: " from title
-//                title = title.substring(7);
-//            }
-//            else
-//            {
-//                System.err.println("No TodoList found in " + file.getAbsolutePath());
-//            }
             loadListItems(fromFile, buffer);
         }
         catch (FileNotFoundException e)
@@ -98,7 +82,8 @@ public class ApplicationStateSerializer
                 // Read current line as ListItem and add to ListItem buffer
                 buffer.add(convertStringToListItem(fromFile.nextLine()));
             }
-        }catch (IllegalArgumentException e)
+        }
+        catch (IllegalArgumentException e)
         {
             throw new IllegalArgumentException();
         }

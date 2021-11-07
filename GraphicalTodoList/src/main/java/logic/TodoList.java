@@ -14,14 +14,12 @@ import java.util.*;
 
 public class TodoList
 {
-//    private String title;
     private final ArrayList<ListItem> listItemsData;
     private final ObservableList<ListItem> listItems;
     private final SimpleIntegerProperty listSize = new SimpleIntegerProperty();
 
     public TodoList()
     {
-//        title = "";
         listItemsData = new ArrayList<>();
         listItems = FXCollections.observableList(listItemsData);
 
@@ -34,7 +32,6 @@ public class TodoList
 
     public TodoList(List<ListItem> listItemsData)
     {
-//        this.title = title;
         this.listItemsData = (ArrayList<ListItem>) listItemsData;
         listItems = FXCollections.observableList(listItemsData);
 
@@ -43,16 +40,6 @@ public class TodoList
         // Add listener to list size
         listItems.addListener((ListChangeListener<ListItem>) c -> listSize.set(listItems.size()));
     }
-
-//    public void setTitle(String title)
-//    {
-//        this.title = title;
-//    }
-//
-//    public String getTitle()
-//    {
-//        return title;
-//    }
 
     public void addItemToList()
     {
@@ -168,10 +155,6 @@ public class TodoList
     public String toString()
     {
         StringBuilder buffer = new StringBuilder();
-
-//        buffer.append("Title: ");
-//        buffer.append(getTitle());
-//        buffer.append('\n');
 
         for(ListItem item : listItems)
         {

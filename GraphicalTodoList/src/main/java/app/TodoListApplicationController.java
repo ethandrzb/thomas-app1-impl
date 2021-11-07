@@ -25,8 +25,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-// TODO: Remove title function from todoList
-
 public class TodoListApplicationController
 {
     private enum listItemFilterOption {ALL, INCOMPLETE_ONLY, COMPLETE_ONLY}
@@ -417,8 +415,6 @@ public class TodoListApplicationController
     {
         GridPane gp = todoListToGridPane();
 
-//        currentListTitleTextField.setText(todoList.getTitle());
-
         // Check if there's already something in the Vbox and remove it if it exists
         if(!listContainerVBox.getChildren().isEmpty())
         {
@@ -443,10 +439,6 @@ public class TodoListApplicationController
 
         // Display new list
         updateDisplayedList();
-
-        // Add listener for title change to update title of todoList
-//        currentListTitleTextField.textProperty().addListener((observable, oldValue, newValue) ->
-//                todoList.setTitle(newValue));
 
         initToggleGroupChangeListeners();
 
