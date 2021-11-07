@@ -139,9 +139,21 @@ public class TodoList
     {
         items.sort((o1, o2) ->
         {
-            if(o1.getDueDate() == null || o2.getDueDate() == null)
+            // Null dates are equal
+            if(o1.getDueDate() == null && o2.getDueDate() == null)
             {
                 return 0;
+            }
+            // First date is null, second is non-null
+            // Null dates are "less" than non-null dates
+            else if(o1.getDueDate() == null)
+            {
+                return -1;
+            }
+            // First date is non-null, second is null
+            else if(o2.getDueDate() == null)
+            {
+                return 1;
             }
 
             return o1.getDueDate().compareTo(o2.getDueDate());
