@@ -14,14 +14,14 @@ import java.util.*;
 
 public class TodoList
 {
-    private String title;
+//    private String title;
     private final ArrayList<ListItem> listItemsData;
     private final ObservableList<ListItem> listItems;
     private final SimpleIntegerProperty listSize = new SimpleIntegerProperty();
 
     public TodoList()
     {
-        title = "";
+//        title = "";
         listItemsData = new ArrayList<>();
         listItems = FXCollections.observableList(listItemsData);
 
@@ -32,9 +32,9 @@ public class TodoList
         addItemToList();
     }
 
-    public TodoList(String title, List<ListItem> listItemsData)
+    public TodoList(List<ListItem> listItemsData)
     {
-        this.title = title;
+//        this.title = title;
         this.listItemsData = (ArrayList<ListItem>) listItemsData;
         listItems = FXCollections.observableList(listItemsData);
 
@@ -44,15 +44,15 @@ public class TodoList
         listItems.addListener((ListChangeListener<ListItem>) c -> listSize.set(listItems.size()));
     }
 
-    public void setTitle(String title)
-    {
-        this.title = title;
-    }
-
-    public String getTitle()
-    {
-        return title;
-    }
+//    public void setTitle(String title)
+//    {
+//        this.title = title;
+//    }
+//
+//    public String getTitle()
+//    {
+//        return title;
+//    }
 
     public void addItemToList()
     {
@@ -169,9 +169,9 @@ public class TodoList
     {
         StringBuilder buffer = new StringBuilder();
 
-        buffer.append("Title: ");
-        buffer.append(getTitle());
-        buffer.append('\n');
+//        buffer.append("Title: ");
+//        buffer.append(getTitle());
+//        buffer.append('\n');
 
         for(ListItem item : listItems)
         {

@@ -182,7 +182,7 @@ public class TodoListApplicationController
         {
             todoList = serializer.loadListFromFile(chosenFile);
         }
-        catch(FileNotFoundException e)
+        catch(FileNotFoundException | IllegalArgumentException e)
         {
             failedToLoadListAlert.show();
         }
@@ -417,7 +417,7 @@ public class TodoListApplicationController
     {
         GridPane gp = todoListToGridPane();
 
-        currentListTitleTextField.setText(todoList.getTitle());
+//        currentListTitleTextField.setText(todoList.getTitle());
 
         // Check if there's already something in the Vbox and remove it if it exists
         if(!listContainerVBox.getChildren().isEmpty())
@@ -445,8 +445,8 @@ public class TodoListApplicationController
         updateDisplayedList();
 
         // Add listener for title change to update title of todoList
-        currentListTitleTextField.textProperty().addListener((observable, oldValue, newValue) ->
-                todoList.setTitle(newValue));
+//        currentListTitleTextField.textProperty().addListener((observable, oldValue, newValue) ->
+//                todoList.setTitle(newValue));
 
         initToggleGroupChangeListeners();
 
@@ -517,13 +517,13 @@ public class TodoListApplicationController
         failedToSaveListAlert.setTitle("Failed to save list");
 
         // Set content for list export failure alert box
-        failedToSaveListAlert.setContentText("Save operation failed. Try again.");
+        failedToSaveListAlert.setContentText("Save operation failed. Please try again.");
 
 
         // Set title for list import failure alert box
         failedToLoadListAlert.setTitle("Failed to load list");
 
         // Set content for list import failure alert box
-        failedToLoadListAlert.setContentText("Load operation failed. Try again.");
+        failedToLoadListAlert.setContentText("Load operation failed. Please try again.");
     }
 }
