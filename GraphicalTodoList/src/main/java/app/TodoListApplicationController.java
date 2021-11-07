@@ -201,23 +201,7 @@ public class TodoListApplicationController
 
             if(removeButtons.size() <= i)
             {
-                // TODO: Move body of this if statement to a separate method to match the other controls in the GridPane
-//                addRemoveButton(i);
-
-                removeButtons.put(currentItem, new Button("Remove"));
-
-                // TODO: Add remove button functionality
-                removeButtons.get(currentItem).pressedProperty().addListener((observable, oldValue, newValue) ->
-                {
-                    // Remove item from todoList
-                    todoList.removeListItem(currentItem);
-
-                    // Remove its associated controls
-                    checkBoxes.remove(currentItem);
-                    textFields.remove(currentItem);
-                    datePickers.remove(currentItem);
-                    removeButtons.remove(currentItem);
-                });
+                addRemoveButton(currentItem);
             }
 
             // Apply filter option
@@ -331,6 +315,23 @@ public class TodoListApplicationController
 
         // Load date of current ListItem in TodoList to associated DatePicker
         datePickers.get(item).valueProperty().set(item.getDueDate());
+    }
+
+    private void addRemoveButton(ListItem item)
+    {
+        removeButtons.put(item, new Button("Remove"));
+
+        removeButtons.get(item).pressedProperty().addListener((observable, oldValue, newValue) ->
+        {
+            // Remove item from todoList
+            todoList.removeListItem(item);
+
+            // Remove its associated controls
+            checkBoxes.remove(item);
+            textFields.remove(item);
+            datePickers.remove(item);
+            removeButtons.remove(item);
+        });
     }
 
     private void applyTextFieldErrorBorder(TextField tf)
