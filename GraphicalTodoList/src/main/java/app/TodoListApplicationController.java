@@ -33,7 +33,8 @@ public class TodoListApplicationController
     private enum listItemFilterOption {ALL, INCOMPLETE_ONLY, COMPLETE_ONLY}
     private listItemFilterOption selectedFilterOption;
 
-    private final Alert emptyItemDescriptionExistsAlert = new Alert(Alert.AlertType.ERROR);
+    private final Alert emptyItemDescriptionExistsOnAddAlert = new Alert(Alert.AlertType.ERROR);
+    private final Alert emptyItemDescriptionExistsOnSaveListAlert = new Alert(Alert.AlertType.ERROR);
     private static final String TEXT_FIELD_ERROR_BORDER_STYLE_NAME = "error";
 
     private TodoList todoList;
@@ -75,7 +76,6 @@ public class TodoListApplicationController
     @FXML
     public void addNewItemButtonPressed()
     {
-        // TODO: Display dialog box to alert user that there exists an item with an empty description.
         // Check if most recently added item has a non-empty description
         if(validateAllItemDescriptionsNonEmpty())
         {
@@ -84,7 +84,7 @@ public class TodoListApplicationController
         }
         else
         {
-            emptyItemDescriptionExistsAlert.show();
+            emptyItemDescriptionExistsOnAddAlert.show();
         }
     }
 
@@ -112,14 +112,29 @@ public class TodoListApplicationController
     public void saveSelectedListsMenuItemSelected()
     {
         // Validate that all item descriptions are non-empty
+        if(validateAllItemDescriptionsNonEmpty())
+        {
+            ApplicationStateSerializer serializer = new ApplicationStateSerializer();
 
-        // Get list of currently selected items in ListView
+            // Open a FileChooser so the user can specify to where the TodoLists should be saved
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
-        // Open a FileChooser so the user can specify where the selected TodoLists should be saved
+            File chosenFile = fileChooser.showSaveDialog(saveSelectedListsMenuItem.getParentPopup().getScene().getWindow());
 
-        // Save these TodoList objects to that file
+            // User closed FileChooser without specifying a path to a new file
+            if(chosenFile == null)
+            {
+                return;
+            }
 
-        System.out.println(todoList);
+            // Load list from file
+            serializer.saveListToFile(todoList, chosenFile);
+        }
+        else
+        {
+            emptyItemDescriptionExistsOnSaveListAlert.show();
+        }
     }
 
     @FXML
@@ -267,15 +282,15 @@ public class TodoListApplicationController
 
                 // Truncate input string to fit in length limit
                 textFields.get(item).setText(textFields.get(item).getText().substring(0, newLength));
-
-                // Update description of current ListItem
-                item.setDescription(textFields.get(item).getText());
             }
             // Apply red border if description is empty
             else
             {
                 applyTextFieldErrorBorder(textFields.get(item));
             }
+
+            // Update description of current ListItem
+            item.setDescription(textFields.get(item).getText());
         });
 
         // Load description of current ListItem in TodoList to associated TextField
@@ -383,12 +398,19 @@ public class TodoListApplicationController
                     updateDisplayedList();
                 });
 
-        // Set title for empty description alert box
-        emptyItemDescriptionExistsAlert.setTitle("Unable to add new item");
+        // Set title for empty description alert box on add
+        emptyItemDescriptionExistsOnAddAlert.setTitle("Unable to add new item");
 
         // Set content for empty description alert box
-        emptyItemDescriptionExistsAlert.setContentText("All items must have a non-empty description" +
+        emptyItemDescriptionExistsOnAddAlert.setContentText("All items must have a non-empty description" +
                                                         " before a new item can be added.");
+
+        // Set title for empty description alert box on save
+        emptyItemDescriptionExistsOnSaveListAlert.setTitle("Unable to save list");
+
+        // Set content for empty description alert box
+        emptyItemDescriptionExistsOnSaveListAlert.setContentText("All items must have a non-empty description" +
+                " before the list can be saved to a file.");
     }
 
     @FXML

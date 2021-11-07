@@ -7,28 +7,51 @@ package logic;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Formatter;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ApplicationStateSerializer
 {
-    public void saveListToFile(List<TodoList> lists, Path filePath)
+    public void saveListToFile(TodoList list, File file)
     {
-        // Attempt to create new file at filePath
+        // Item due date ---------------------------|
+        // Item description ----------|             |
+        // Item completed --------\/  \/            \/
+        String itemLineFormat = "[%c] %s (Due Date: %s)%n";
 
-        // For each TodoList in lists
+        // Attempt to create new file at filePath
+        try(Formatter output = new Formatter(file))
+        {
             // Write list title to file
-            // For each item in current TodoList
-                // Write completed checkbox ("[x]") or incomplete checkbox ("[ ]")
+            output.format("Title: %s%n", list.getTitle());
+
+            // For each item in list
+            for(ListItem item : list.getAllListItems())
+            {
+                // Generate completed checkbox ("[x]") or incomplete checkbox ("[ ]")
+                char itemCompleted = (item.isItemCompleted()) ? 'x' : ' ';
+
                 // Write item description
+                String description = item.getDescription();
+
                 // If item has due date, write due date formatted as "(Due Date: yyyy-MM-dd)"
+                String dueDate = (item.getDueDate() != null) ? item.getDueDate().toString()
+
                 // Else, write "(Due Date: none)"
+                : "none";
+
+                output.format(itemLineFormat, itemCompleted, description, dueDate);
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            System.err.println("Unable to create new file at " + file.getAbsolutePath());
+        }
     }
 
     public TodoList loadListFromFile(File file)
