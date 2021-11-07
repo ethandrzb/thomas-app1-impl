@@ -197,8 +197,17 @@ public class TodoListApplicationController
                 removeButtons.put(currentItem, new Button("Remove"));
 
                 // TODO: Add remove button functionality
-                int finalI = i;
-//                removeButtons.get(i).pressedProperty().addListener((observable, oldValue, newValue) -> removeItem(finalI));
+                removeButtons.get(currentItem).pressedProperty().addListener((observable, oldValue, newValue) ->
+                {
+                    // Remove item from todoList
+                    todoList.removeListItem(currentItem);
+
+                    // Remove its associated controls
+                    checkBoxes.remove(currentItem);
+                    textFields.remove(currentItem);
+                    datePickers.remove(currentItem);
+                    removeButtons.remove(currentItem);
+                });
             }
 
             // Apply filter option

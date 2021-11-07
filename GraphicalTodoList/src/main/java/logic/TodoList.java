@@ -61,11 +61,10 @@ public class TodoList
     }
 
     // Return boolean to indicate success?
-    public void removeListItem(int index)
+    public void removeListItem(ListItem item)
     {
         // Remove listItem at index, if it exists
-//        listItemsData.remove(index);
-        listItems.remove(index);
+        listItems.remove(item);
     }
 
     public SimpleIntegerProperty getListSize()
@@ -75,7 +74,7 @@ public class TodoList
 
     public ListItem getListItem(int index)
     {
-        return listItemsData.get(index);
+        return listItems.get(index);
     }
 
     public List<ListItem> getAllListItems()
