@@ -22,8 +22,7 @@ import logic.TodoList;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 // TODO: Remove all debugging print statements
 // TODO: Display error dialog box when save/load fails
@@ -94,6 +93,7 @@ public class TodoListApplicationController
         else
         {
             emptyItemDescriptionExistsOnAddAlert.show();
+            listFilterOptionToggleGroup.selectToggle(viewAllItemsRadioMenuItem);
         }
     }
 
@@ -105,10 +105,10 @@ public class TodoListApplicationController
 
         for(int i = 0; i < todoList.getListSize().get(); i++)
         {
-            if(todoList.getAllListItems().get(i).getDescription().isEmpty())
+            if(todoList.getAllListItems(false).get(i).getDescription().isEmpty())
             {
                 // Apply error border to empty TextField
-                applyTextFieldErrorBorder(textFields.get(todoList.getAllListItems().get(i)));
+                applyTextFieldErrorBorder(textFields.get(todoList.getAllListItems(false).get(i)));
 
                 allItemDescriptionsNonEmpty = false;
             }
@@ -129,6 +129,8 @@ public class TodoListApplicationController
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
+            // Set default file name to title of currently loaded list if the title is non-empty
+
             File chosenFile = fileChooser.showSaveDialog(saveSelectedListsMenuItem.getParentPopup().getScene().getWindow());
 
             // User closed FileChooser without specifying a path to a new file
@@ -143,6 +145,7 @@ public class TodoListApplicationController
         else
         {
             emptyItemDescriptionExistsOnSaveListAlert.show();
+            listFilterOptionToggleGroup.selectToggle(viewAllItemsRadioMenuItem);
         }
     }
 
@@ -183,16 +186,25 @@ public class TodoListApplicationController
         removeButtons.clear();
     }
 
-    // TODO: Add sort list parameter
     private GridPane todoListToGridPane()
     {
         GridPane table = new GridPane();
 
-        for(int i = 0; i < todoList.getAllListItems().size(); i++)
-        {
-            ListItem currentItem = todoList.getAllListItems().get(i);
+        boolean sortFilteredList = selectedSortOption == sortListOption.BY_DUE_DATE;
 
-            // Make new control objects, if necessary
+        // Get reference to appropriate list based on selected filter option
+        List<ListItem> filteredList = switch(selectedFilterOption)
+                {
+                    case ALL -> todoList.getAllListItems(sortFilteredList);
+                    case INCOMPLETE_ONLY -> todoList.getIncompleteItems(sortFilteredList);
+                    case COMPLETE_ONLY -> todoList.getCompletedItems(sortFilteredList);
+                };
+
+        for(int i = 0; i < filteredList.size(); i++)
+        {
+            ListItem currentItem = filteredList.get(i);
+
+            // Make new control objects, as needed
             if(checkBoxes.size() <= i)
             {
                 addCheckBox(currentItem);
@@ -213,29 +225,19 @@ public class TodoListApplicationController
                 addRemoveButton(currentItem);
             }
 
-            // Apply filter option
-            boolean addListItemToGridPane = switch(selectedFilterOption)
-                    {
-                        case ALL -> true;
-                        case INCOMPLETE_ONLY -> !todoList.getListItem(i).isItemCompleted();
-                        case COMPLETE_ONLY -> todoList.getListItem(i).isItemCompleted();
-                    };
+            // TODO: Find race condition or other source of error that would cause one of the control object maps to return null
 
-            // Only add current ListItem if permitted by filter
-            if(addListItemToGridPane)
-            {
-                // Add controls to GridPane
-                table.add(checkBoxes.get(currentItem), 0, i);
-                table.add(textFields.get(currentItem), 1, i);
-                table.add(datePickers.get(currentItem), 2, i);
-                table.add(removeButtons.get(currentItem), 3, i);
+            // Add controls to GridPane
+            table.add(checkBoxes.get(currentItem), 0, i);
+            table.add(textFields.get(currentItem), 1, i);
+            table.add(datePickers.get(currentItem), 2, i);
+            table.add(removeButtons.get(currentItem), 3, i);
 
-                // Set margins between controls
-                GridPane.setMargin(checkBoxes.get(currentItem), new Insets(5));
-                GridPane.setMargin(textFields.get(currentItem), new Insets(5));
-                GridPane.setMargin(datePickers.get(currentItem), new Insets(5));
-                GridPane.setMargin(removeButtons.get(currentItem), new Insets(5));
-            }
+            // Set margins between controls
+            GridPane.setMargin(checkBoxes.get(currentItem), new Insets(5));
+            GridPane.setMargin(textFields.get(currentItem), new Insets(5));
+            GridPane.setMargin(datePickers.get(currentItem), new Insets(5));
+            GridPane.setMargin(removeButtons.get(currentItem), new Insets(5));
         }
         table.setAlignment(Pos.CENTER);
 

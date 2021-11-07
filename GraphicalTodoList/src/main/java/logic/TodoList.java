@@ -72,18 +72,23 @@ public class TodoList
         return listSize;
     }
 
-    public ListItem getListItem(int index)
+    public List<ListItem> getAllListItems(boolean sorted)
     {
-        return listItems.get(index);
-    }
+        // Even though no items are filtered in this case, listItems is still
+        // wrapped to prevent its reference from being leaked.
+        // Also ensures consistency of return types among other getXListItems methods.
+        ArrayList<ListItem> allItems = new ArrayList<>(listItems);
 
-    public List<ListItem> getAllListItems()
-    {
+        if(sorted)
+        {
+            sortTodoList(allItems);
+        }
+
         // return all listItems
-        return listItems;
+        return allItems;
     }
 
-    public List<ListItem> getCompletedItems()
+    public List<ListItem> getCompletedItems(boolean sorted)
     {
         // Create output ArrayList
         ArrayList<ListItem> completed = new ArrayList<>();
@@ -97,11 +102,16 @@ public class TodoList
             }
         }
 
+        if(sorted)
+        {
+            sortTodoList(completed);
+        }
+
         // Return this list
         return completed;
     }
 
-    public List<ListItem> getIncompleteItems()
+    public List<ListItem> getIncompleteItems(boolean sorted)
     {
         // Create output ArrayList
         ArrayList<ListItem> incomplete = new ArrayList<>();
@@ -115,8 +125,27 @@ public class TodoList
             }
         }
 
+        if(sorted)
+        {
+            sortTodoList(incomplete);
+        }
+
         // Return this list
         return incomplete;
+    }
+
+    // Sorts list of ListItems by due date
+    private static void sortTodoList(List<ListItem> items)
+    {
+        items.sort((o1, o2) ->
+        {
+            if(o1.getDueDate() == null || o2.getDueDate() == null)
+            {
+                return 0;
+            }
+
+            return o1.getDueDate().compareTo(o2.getDueDate());
+        });
     }
 
     public void clear()

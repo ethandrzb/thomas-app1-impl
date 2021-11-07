@@ -31,7 +31,7 @@ public class ApplicationStateSerializer
             output.format("Title: %s%n", list.getTitle());
 
             // For each item in list
-            for(ListItem item : list.getAllListItems())
+            for(ListItem item : list.getAllListItems(false))
             {
                 // Generate completed checkbox ("[x]") or incomplete checkbox ("[ ]")
                 char itemCompleted = (item.isItemCompleted()) ? 'x' : ' ';
