@@ -450,7 +450,6 @@ public class TodoListApplicationController
     private void initToggleGroupChangeListeners()
     {
         // Add listener to listFilterOptionToggleGroup to convert currently selected filter mode menu item to enum
-        // TODO: Move lambda body to separate method to enable testing
         listFilterOptionToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
         {
             // Update selectedFilterOption
@@ -460,7 +459,6 @@ public class TodoListApplicationController
         });
 
         // Add listener to sortOptionToggleGroup to convert currently selected sort mode menu item to enum
-        // TODO: Move lambda body to separate method to enable testing
         sortOptionToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) ->
         {
             // Update selectedSortOption
