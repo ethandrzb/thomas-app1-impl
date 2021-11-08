@@ -35,8 +35,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem fx:id="saveSelectedListsMenuItem" mnemonicParsing="false" onAction="#saveSelectedListsMenuItemSelected" text="Save List" />
-                  <MenuItem fx:id="loadListsMenuItem" mnemonicParsing="false" onAction="#loadListsMenuItemSelected" text="Load List" />
+                  <MenuItem fx:id="saveSelectedListsMenuItem" mnemonicParsing="false" onAction="#saveSelectedListsMenuItemSelected" text="Save list" />
+                  <MenuItem fx:id="loadListsMenuItem" mnemonicParsing="false" onAction="#loadListsMenuItemSelected" text="Load list" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
@@ -59,12 +59,12 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Sort by">
                     <items>
-                        <RadioMenuItem fx:id="sortByDateAddedRadioMenuItem" mnemonicParsing="false" selected="true" text="Sort by Date Added">
+                        <RadioMenuItem fx:id="sortByDateAddedRadioMenuItem" mnemonicParsing="false" selected="true" text="Sort by date added">
                            <toggleGroup>
                               <ToggleGroup fx:id="sortOptionToggleGroup" />
                            </toggleGroup>
                         </RadioMenuItem>
-                        <RadioMenuItem fx:id="sortByDueDateRadioMenuItem" mnemonicParsing="false" text="Sort by Due Date" toggleGroup="$sortOptionToggleGroup" />
+                        <RadioMenuItem fx:id="sortByDueDateRadioMenuItem" mnemonicParsing="false" text="Sort by due date" toggleGroup="$sortOptionToggleGroup" />
                     </items>
                   </Menu>
                </items>
