@@ -29,7 +29,7 @@ public class ApplicationStateSerializer
         try(Formatter output = new Formatter(file))
         {
             // For each item in list
-            for(ListItem item : list.getAllListItems(false))
+            for(ListItem item : list.getAllListItems())
             {
                 // Generate completed checkbox ("[x]") or incomplete checkbox ("[ ]")
                 char itemCompleted = (item.isItemCompleted()) ? 'x' : ' ';

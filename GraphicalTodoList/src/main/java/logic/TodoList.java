@@ -59,23 +59,17 @@ public class TodoList
         return listSize;
     }
 
-    public List<ListItem> getAllListItems(boolean sorted)
+    public List<ListItem> getAllListItems()
     {
         // Even though no items are filtered in this case, listItems is still
         // wrapped to prevent its reference from being leaked.
         // Also ensures consistency of return types among other getXListItems methods.
-        ArrayList<ListItem> allItems = new ArrayList<>(listItems);
-
-        if(sorted)
-        {
-            sortTodoList(allItems);
-        }
 
         // return all listItems
-        return allItems;
+        return new ArrayList<>(listItems);
     }
 
-    public List<ListItem> getCompletedItems(boolean sorted)
+    public List<ListItem> getCompletedItems()
     {
         // Create output ArrayList
         ArrayList<ListItem> completed = new ArrayList<>();
@@ -89,16 +83,11 @@ public class TodoList
             }
         }
 
-        if(sorted)
-        {
-            sortTodoList(completed);
-        }
-
         // Return this list
         return completed;
     }
 
-    public List<ListItem> getIncompleteItems(boolean sorted)
+    public List<ListItem> getIncompleteItems()
     {
         // Create output ArrayList
         ArrayList<ListItem> incomplete = new ArrayList<>();
@@ -112,17 +101,12 @@ public class TodoList
             }
         }
 
-        if(sorted)
-        {
-            sortTodoList(incomplete);
-        }
-
         // Return this list
         return incomplete;
     }
 
     // Sorts list of ListItems by due date
-    private static void sortTodoList(List<ListItem> items)
+    public static void sortTodoList(List<ListItem> items)
     {
         items.sort((o1, o2) ->
         {

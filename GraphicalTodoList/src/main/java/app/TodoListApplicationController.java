@@ -95,16 +95,17 @@ public class TodoListApplicationController
     // Highlights empty description fields.
     // Returns false if any highlights were applied
     // Otherwise, returns true.
-    private boolean validateAllItemDescriptionsNonEmpty()
+    // TODO: Test me
+    public boolean validateAllItemDescriptionsNonEmpty()
     {
         boolean allItemDescriptionsNonEmpty = true;
 
         for(int i = 0; i < todoList.getListSize().get(); i++)
         {
-            if(todoList.getAllListItems(false).get(i).getDescription().isEmpty())
+            if(todoList.getAllListItems().get(i).getDescription().isEmpty())
             {
                 // Apply error border to empty TextField
-                applyTextFieldErrorBorder(textFields.get(todoList.getAllListItems(false).get(i)));
+                applyTextFieldErrorBorder(textFields.get(todoList.getAllListItems().get(i)));
 
                 allItemDescriptionsNonEmpty = false;
             }
@@ -214,15 +215,18 @@ public class TodoListApplicationController
     {
         GridPane table = new GridPane();
 
-        boolean sortFilteredList = selectedSortOption == sortListOption.BY_DUE_DATE;
-
         // Get reference to appropriate list based on selected filter option
         List<ListItem> filteredList = switch(selectedFilterOption)
                 {
-                    case ALL -> todoList.getAllListItems(sortFilteredList);
-                    case INCOMPLETE_ONLY -> todoList.getIncompleteItems(sortFilteredList);
-                    case COMPLETE_ONLY -> todoList.getCompletedItems(sortFilteredList);
+                    case ALL -> todoList.getAllListItems();
+                    case INCOMPLETE_ONLY -> todoList.getIncompleteItems();
+                    case COMPLETE_ONLY -> todoList.getCompletedItems();
                 };
+
+        if(selectedSortOption == sortListOption.BY_DUE_DATE)
+        {
+            TodoList.sortTodoList(filteredList);
+        }
 
         for(int i = 0; i < filteredList.size(); i++)
         {
@@ -453,6 +457,7 @@ public class TodoListApplicationController
     private void initToggleGroupChangeListeners()
     {
         // Add listener to listFilterOptionToggleGroup to convert currently selected filter mode menu item to enum
+        // TODO: Move lambda body to separate method to enable testing
         listFilterOptionToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) ->
         {
             // Update selectedFilterOption
@@ -462,6 +467,7 @@ public class TodoListApplicationController
         });
 
         // Add listener to sortOptionToggleGroup to convert currently selected sort mode menu item to enum
+        // TODO: Move lambda body to separate method to enable testing
         sortOptionToggleGroup.selectedToggleProperty().addListener(((observable, oldValue, newValue) ->
         {
             // Update selectedSortOption

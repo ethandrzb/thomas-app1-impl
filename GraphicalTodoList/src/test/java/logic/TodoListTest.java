@@ -89,9 +89,9 @@ class TodoListTest
         assertEquals(2, list.getListSize().get());
 
         // Assert that this item was created using ListItem's default constructor
-        assertFalse(list.getAllListItems(false).get(1).isItemCompleted());
-        assertEquals("Description", list.getAllListItems(false).get(1).getDescription());
-        assertNull(list.getAllListItems(false).get(1).getDueDate());
+        assertFalse(list.getAllListItems().get(1).isItemCompleted());
+        assertEquals("Description", list.getAllListItems().get(1).getDescription());
+        assertNull(list.getAllListItems().get(1).getDueDate());
     }
 
     @Test
@@ -114,7 +114,7 @@ class TodoListTest
     }
 
     @Test
-    void getAllListItemsUnsorted()
+    void getAllListItems()
     {
         ArrayList<ListItem> expected = new ArrayList<>(testListItems);
 
@@ -124,7 +124,7 @@ class TodoListTest
     }
 
     @Test
-    void getAllListItemsSorted()
+    void sortTodoList()
     {
         ArrayList<ListItem> expected = new ArrayList<>();
 
@@ -141,9 +141,8 @@ class TodoListTest
         compareListItemArray(expected, true, 0);
     }
 
-    // TODO: Test both sorted and unsorted cases
     @Test
-    void getCompletedItemsUnsorted()
+    void getCompletedItems()
     {
         ArrayList<ListItem> expected = new ArrayList<>(testCompletedListItems);
 
@@ -153,23 +152,7 @@ class TodoListTest
     }
 
     @Test
-    void getCompletedItemsSorted()
-    {
-        ArrayList<ListItem> expected = new ArrayList<>();
-
-        list = new TodoList(new ArrayList<>(testListItems));
-
-        // Generate expected test data
-        expected.add(new ListItem(true, "i4", LocalDate.parse("2021-11-04", dateFormatter)));
-        expected.add(new ListItem(true, "i2", LocalDate.parse("2021-11-06", dateFormatter)));
-
-        // Assert sorted list matches expected order
-        compareListItemArray(expected, true, 1);
-    }
-
-    // TODO: Test both sorted and unsorted cases
-    @Test
-    void getIncompleteItemsUnsorted()
+    void getIncompleteItems()
     {
         ArrayList<ListItem> expected = new ArrayList<>(testIncompleteListItems);
 
@@ -177,23 +160,6 @@ class TodoListTest
 
         compareListItemArray(expected, false, 2);
     }
-
-    @Test
-    void getIncompleteItemsSorted()
-    {
-        ArrayList<ListItem> expected = new ArrayList<>();
-
-        list = new TodoList(new ArrayList<>(testIncompleteListItems));
-
-        // Generate expected test data
-        expected.add(new ListItem(false, "i5", LocalDate.parse("2021-11-03", dateFormatter)));
-        expected.add(new ListItem(false, "i3", LocalDate.parse("2021-11-05", dateFormatter)));
-        expected.add(new ListItem(false, "i1", LocalDate.parse("2021-11-07", dateFormatter)));
-
-        // Assert sorted list matches expected order
-        compareListItemArray(expected, true, 2);
-    }
-
 
     @Test
     void canStoreAtLeast256Items()
@@ -224,7 +190,7 @@ class TodoListTest
         list.clear();
 
         // Assert that list is empty
-        assertTrue(list.getAllListItems(false).isEmpty());
+        assertTrue(list.getAllListItems().isEmpty());
     }
 
     @Test
@@ -267,13 +233,17 @@ class TodoListTest
     {
         ArrayList<ListItem> selectedList = (ArrayList<ListItem>) switch(mode)
                 {
-                    case 0 -> list.getAllListItems(sorted);
-                    case 1 -> list.getCompletedItems(sorted);
-                    case 2 -> list.getIncompleteItems(sorted);
+                    case 0 -> list.getAllListItems();
+                    case 1 -> list.getCompletedItems();
+                    case 2 -> list.getIncompleteItems();
 
                     default -> throw new IllegalStateException("Unexpected value: " + mode);
                 };
 
+        if(sorted)
+        {
+            TodoList.sortTodoList(selectedList);
+        }
 
         for(int i = 0; i < selectedList.size(); i++)
         {
