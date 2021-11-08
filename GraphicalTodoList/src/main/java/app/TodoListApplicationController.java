@@ -304,6 +304,7 @@ public class TodoListApplicationController
     private void addTextField(ListItem item)
     {
         textFields.put(item, new TextField());
+        textFields.get(item).setPromptText("Description");
         textFields.get(item).setAlignment(Pos.CENTER);
 
         // Attach listener to current TextField
@@ -337,6 +338,7 @@ public class TodoListApplicationController
     private void addDatePicker(ListItem item)
     {
         datePickers.put(item, new DatePicker());
+        datePickers.get(item).setPromptText("Due Date");
         datePickers.get(item).setConverter(new StringConverter<>()
         {
             final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
