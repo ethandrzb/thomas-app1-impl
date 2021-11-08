@@ -1,58 +1,80 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-class Application
+class TodoListApplication
 {
     +static void main(String[] args)
     +void start(Stage stage)
 }
 
-+class ApplicationController
++class TodoListApplicationController
 {
+    -listItemFilterOption selectedFilterOption
+    -sortListOption selectedSortOption
 
-    -Button addNewListButton
+    -final Alert emptyItemDescriptionExistsOnAddAlert
+    -final Alert emptyItemDescriptionExistsOnSaveListAlert
+    -final Alert failedToSaveListAlert
+    -final Alert failedToLoadListAlert
 
-    -ListView<?> availableListView
+    -static final String TEXT_FIELD_ERROR_BORDER_STYLE_NAME
 
-    -Label currentListTitleLabel
+    -TodoList todoList
+    -final HashMap<ListItem, TextField> textFields
+    -final HashMap<ListItem, CheckBox> checkBoxes
+    -final HashMap<ListItem, DatePicker> datePickers
+    -final HashMap<ListItem, Button> removeButtons
 
-    -CheckBox item1Checkbox
-
-    -ToggleGroup listViewModeToggleGroup
-
+    -ToggleGroup listFilterOptionToggleGroup
     -MenuItem loadListsMenuItem
-
-    -Button removeSelectedListsButton
-
     -MenuItem saveSelectedListsMenuItem
-
+    -ToggleGroup sortOptionToggleGroup
     -RadioMenuItem viewAllItemsRadioMenuItem
-
     -RadioMenuItem viewCompletedItemsOnlyRadioMenuItem
-
     -RadioMenuItem viewIncompleteItemsOnlyRadioMenuItem
+    -RadioMenuItem sortByDateAddedRadioMenuItem
+    -RadioMenuItem sortByDueDateRadioMenuItem
+    -VBox listContainerVBox
 
-    +void addNewItemButtonPressed(ActionEvent actionEvent)
+    +void addNewItemButtonPressed()
 
-    +void addNewListButtonPressed(ActionEvent event)
+    +void highlightEmptyDescriptions()
+    +void saveSelectedListsMenuItemSelected()
 
-    +void removeSelectedListsButtonPressed(ActionEvent event)
+    +void loadListsMenuItemSelected()
+    +void clearListMenuItemSelected()
+    -void clearGeneratedControls()
 
-    +void viewAllListItemsRadioMenuItemSelected(ActionEvent actionEvent)
+    -GridPane todoListToGridPane()
+    -boolean allControlsPresent(ListItem item)
+    -void resetTodoListToGridPane()
+    -void addCheckBox(ListItem item)
+    -void addTextField(ListItem item)
+    -void addDatePicker(ListItem item)
+    -void addRemoveButton(ListItem item)
 
-    +void viewIncompleteItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
-
-    +void viewCompletedItemsOnlyRadioMenuItemSelected(ActionEvent actionEvent)
-
-    +void saveSelectedListsMenuItemSelected(ActionEvent actionEvent)
-
-    +void loadListsMenuItemSelected(ActionEvent actionEvent)
-
-    -GridPane todoListToGridPane(List<ListItem> items)
-
-    -void updateSceneGraph(GridPane gp)
+    -void applyTextFieldErrorBorder(TextField tf)
+    -void removeTextFieldErrorBorder(TextField tf)
+    -void updateDisplayedList()
 
     +void initialize()
+    -void initWithEmptyList()
+    -void initToggleGroupChangeListeners()
+    -void initRadioMenuItemEnums()
+    -void initAlertBoxes()
+}
+
+enum listItemFilterOption
+{
+    ALL
+    INCOMPLETE_ONLY
+    COMPLETE_ONLY
+}
+
+enum sortListOption
+{
+    BY_DATE_ADDED
+    BY_DUE_DATE
 }
 
 +class ListItem
@@ -62,59 +84,58 @@ class Application
     -LocalDate dueDate
 
     +ListItem()
-
     +ListItem(boolean itemCompleted, String description, LocalDate dueDate)
-
     +ListItem(boolean itemCompleted, String description)
 
     +void setItemCompleted(boolean itemCompleted)
-
     +boolean isItemCompleted()
-
+    
     +void setDescription(String description)
-
     +String getDescription()
-
+    
     +void setDueDate(LocalDate dueDate)
-
     +LocalDate getDueDate()
+    
+    +String toString()
 }
 
 +class TodoList
 {
-    -String title
-    -final ArrayList<ListItem> listItems
-
+    -final ArrayList<ListItem> listItemsData;
+    -final ObservableList<ListItem> listItems;
+    -final SimpleIntegerProperty listSize
+    
     +TodoList()
-
-    +TodoList(String title, List<ListItem> listItems)
-
-    +void setTitle(String title)
-
-    +String getTitle()
-
+    +TodoList(List<ListItem> listItemsData)
     +void addItemToList()
-
-    +void removeListItem(int index)
-
-    +List<ListItem> getListItems()
-
+    +SimpleIntegerProperty getListSize()
+    +List<ListItem> getAllListItems()
     +List<ListItem> getCompletedItems()
-
     +List<ListItem> getIncompleteItems()
+    +static void sortTodoList(List<ListItem> items)
+    +boolean validateAllItemDescriptionsNonEmpty()
+    +void clear()
+    +String toString()
 }
 
 +class ApplicationStateSerializer
 {
-    +void saveListsToFile(List<TodoList> lists, Path filePath)
+    +void saveListToFile(TodoList list, File file)
 
-    +List<TodoList> loadListsFromFile(Path filePath)
+    +TodoList loadListFromFile(File file)
 
+    -void loadListItems(Scanner fromFile, List<ListItem> buffer)
+    
     -ListItem convertStringToListItem(String line)
+    
+    -boolean match(String input, String regex)
 }
 
-ApplicationController -- ApplicationStateSerializer
-ListItem *-- TodoList
-ApplicationController *-- TodoList
+TodoListApplicationController *-- ApplicationStateSerializer
+ListItem --* TodoList
+TodoListApplicationController *-- TodoList
+
+TodoListApplicationController *-- listItemFilterOption
+TodoListApplicationController *-- sortListOption
 
 @enduml
