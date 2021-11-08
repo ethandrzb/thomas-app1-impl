@@ -35,8 +35,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem fx:id="saveSelectedListsMenuItem" mnemonicParsing="false" onAction="#saveSelectedListsMenuItemSelected" text="Save Selected List(s)" />
-                  <MenuItem fx:id="loadListsMenuItem" mnemonicParsing="false" onAction="#loadListsMenuItemSelected" text="Load List(s)" />
+                  <MenuItem fx:id="saveSelectedListsMenuItem" mnemonicParsing="false" onAction="#saveSelectedListsMenuItemSelected" text="Save List" />
+                  <MenuItem fx:id="loadListsMenuItem" mnemonicParsing="false" onAction="#loadListsMenuItemSelected" text="Load List" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
