@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -109,10 +110,9 @@ class TodoListTest
         assertEquals(4, list.getListSize().get());
 
         // Check list contents
-        compareListItemArray(expected, false);
+        compareListItemArray(expected, false, 0);
     }
 
-    // TODO: Test both sorted and unsorted cases
     @Test
     void getAllListItemsUnsorted()
     {
@@ -120,21 +120,7 @@ class TodoListTest
 
         list = new TodoList(new ArrayList<>(testListItems));
 
-        // Unsorted case
-        compareListItemArray(expected, false);
-
-        // Sorted case
-        expected.clear();
-
-        // Generate expected test data
-        expected.add(new ListItem(false, "i5", LocalDate.parse("2021-11-03", dateFormatter)));
-        expected.add(new ListItem(true, "i4", LocalDate.parse("2021-11-04", dateFormatter)));
-        expected.add(new ListItem(false, "i3", LocalDate.parse("2021-11-05", dateFormatter)));
-        expected.add(new ListItem(true, "i2", LocalDate.parse("2021-11-06", dateFormatter)));
-        expected.add(new ListItem(false, "i1", LocalDate.parse("2021-11-07", dateFormatter)));
-
-        // Assert sorted list matches expected order
-        compareListItemArray(expected, true);
+        compareListItemArray(expected, false, 0);
     }
 
     @Test
@@ -152,64 +138,148 @@ class TodoListTest
         expected.add(new ListItem(false, "i1", LocalDate.parse("2021-11-07", dateFormatter)));
 
         // Assert sorted list matches expected order
-        compareListItemArray(expected, true);
+        compareListItemArray(expected, true, 0);
     }
 
     // TODO: Test both sorted and unsorted cases
     @Test
-    void getCompletedItems()
+    void getCompletedItemsUnsorted()
     {
-        // Make ArrayList of ListItems to use as test data, some complete and some incomplete
+        ArrayList<ListItem> expected = new ArrayList<>(testCompletedListItems);
 
-        // Make a new TodoList with this ArrayList
+        list = new TodoList(new ArrayList<>(testCompletedListItems));
 
-        // Get completed ListItems
+        compareListItemArray(expected, false, 1);
+    }
 
-        // Assert that all ListItems returned are marked as complete
+    @Test
+    void getCompletedItemsSorted()
+    {
+        ArrayList<ListItem> expected = new ArrayList<>();
 
-        // Assert incomplete ListItems from test data are not present in list returned by getCompletedItems
+        list = new TodoList(new ArrayList<>(testListItems));
+
+        // Generate expected test data
+        expected.add(new ListItem(true, "i4", LocalDate.parse("2021-11-04", dateFormatter)));
+        expected.add(new ListItem(true, "i2", LocalDate.parse("2021-11-06", dateFormatter)));
+
+        // Assert sorted list matches expected order
+        compareListItemArray(expected, true, 1);
     }
 
     // TODO: Test both sorted and unsorted cases
     @Test
-    void getIncompleteItems()
+    void getIncompleteItemsUnsorted()
     {
-        // Make ArrayList of ListItems to use as test data, some complete and some incomplete
+        ArrayList<ListItem> expected = new ArrayList<>(testIncompleteListItems);
 
-        // Make a new TodoList with this ArrayList
+        list = new TodoList(new ArrayList<>(testIncompleteListItems));
 
-        // Get incomplete ListItems
-
-        // Assert that all ListItems returned are marked as incomplete
-
-        // Assert complete ListItems from test data are not present in list returned by getIncompleteItems
+        compareListItemArray(expected, false, 2);
     }
+
+    @Test
+    void getIncompleteItemsSorted()
+    {
+        ArrayList<ListItem> expected = new ArrayList<>();
+
+        list = new TodoList(new ArrayList<>(testIncompleteListItems));
+
+        // Generate expected test data
+        expected.add(new ListItem(false, "i5", LocalDate.parse("2021-11-03", dateFormatter)));
+        expected.add(new ListItem(false, "i3", LocalDate.parse("2021-11-05", dateFormatter)));
+        expected.add(new ListItem(false, "i1", LocalDate.parse("2021-11-07", dateFormatter)));
+
+        // Assert sorted list matches expected order
+        compareListItemArray(expected, true, 2);
+    }
+
 
     @Test
     void canStoreAtLeast256Items()
     {
+        ArrayList<ListItem> expected = new ArrayList<>();
+        Random rand = new Random();
+
         // Algorithmically generate 260 ListItems
+        for(int i = 0; i < 260; i++)
+        {
+            expected.add(new ListItem(rand.nextBoolean(), "item #" + i, null));
+        }
 
         // Add all ListItems to TodoList
+        list = new TodoList(new ArrayList<>(expected));
 
         // Assert that all expected items are present and accessible
+        compareListItemArray(expected, false, 0);
     }
 
     @Test
-    void clear() {
-    }
-
-    @Test
-    void testToString() {
-    }
-
-    void compareListItemArray(List<ListItem> expected, boolean sorted)
+    void clear()
     {
-        for(int i = 0; i < list.getListSize().get(); i++)
+        // Add list of 5 items to list
+        list = new TodoList(testListItems);
+
+        // Clear list
+        list.clear();
+
+        // Assert that list is empty
+        assertTrue(list.getAllListItems(false).isEmpty());
+    }
+
+    @Test
+    void testToString()
+    {
+        list = new TodoList(testListItems);
+
+        String expected = """
+                Description: i1
+                Completed?: No
+                Due Date: 2021-11-07
+                                
+                Description: i2
+                Completed?: Yes
+                Due Date: 2021-11-06
+                                
+                Description: i3
+                Completed?: No
+                Due Date: 2021-11-05
+                                
+                Description: i4
+                Completed?: Yes
+                Due Date: 2021-11-04
+                                
+                Description: i5
+                Completed?: No
+                Due Date: 2021-11-03
+                
+                """;
+
+        assertEquals(expected, list.toString());
+    }
+
+    // Helper method for tests
+    // Mode:
+        // 0 = all items
+        // 1 = complete items only
+        // 2 = incomplete items only
+    void compareListItemArray(List<ListItem> expected, boolean sorted, int mode)
+    {
+        ArrayList<ListItem> selectedList = (ArrayList<ListItem>) switch(mode)
+                {
+                    case 0 -> list.getAllListItems(sorted);
+                    case 1 -> list.getCompletedItems(sorted);
+                    case 2 -> list.getIncompleteItems(sorted);
+
+                    default -> throw new IllegalStateException("Unexpected value: " + mode);
+                };
+
+
+        for(int i = 0; i < selectedList.size(); i++)
         {
-            assertEquals(expected.get(i).isItemCompleted(), list.getAllListItems(sorted).get(i).isItemCompleted());
-            assertEquals(expected.get(i).getDescription(), list.getAllListItems(sorted).get(i).getDescription());
-            assertEquals(expected.get(i).getDueDate(), list.getAllListItems(sorted).get(i).getDueDate());
+            assertEquals(expected.get(i).isItemCompleted(), selectedList.get(i).isItemCompleted());
+            assertEquals(expected.get(i).getDescription(), selectedList.get(i).getDescription());
+            assertEquals(expected.get(i).getDueDate(), selectedList.get(i).getDueDate());
         }
     }
 }
