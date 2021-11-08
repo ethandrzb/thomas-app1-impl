@@ -142,6 +142,20 @@ class TodoListTest
     }
 
     @Test
+    void validateAllItemDescriptionsNonEmpty()
+    {
+        list.addItemToList();
+
+        assertTrue(list.validateAllItemDescriptionsNonEmpty());
+
+        // Make one item's description empty
+        list.getAllListItems().get(1).setDescription("");
+
+        assertFalse(list.validateAllItemDescriptionsNonEmpty());
+    }
+
+
+    @Test
     void getCompletedItems()
     {
         ArrayList<ListItem> expected = new ArrayList<>(testCompletedListItems);

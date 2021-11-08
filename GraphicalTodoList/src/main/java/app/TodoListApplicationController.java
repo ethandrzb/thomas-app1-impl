@@ -80,45 +80,37 @@ public class TodoListApplicationController
     public void addNewItemButtonPressed()
     {
         // Check if most recently added item has a non-empty description
-        if(validateAllItemDescriptionsNonEmpty())
+        if(todoList.validateAllItemDescriptionsNonEmpty())
         {
             // Add new item to this TodoList
             todoList.addItemToList();
         }
         else
         {
+            highlightEmptyDescriptions();
             emptyItemDescriptionExistsOnAddAlert.show();
             listFilterOptionToggleGroup.selectToggle(viewAllItemsRadioMenuItem);
         }
     }
 
     // Highlights empty description fields.
-    // Returns false if any highlights were applied
-    // Otherwise, returns true.
-    // TODO: Test me
-    public boolean validateAllItemDescriptionsNonEmpty()
+    public void highlightEmptyDescriptions()
     {
-        boolean allItemDescriptionsNonEmpty = true;
-
         for(int i = 0; i < todoList.getListSize().get(); i++)
         {
             if(todoList.getAllListItems().get(i).getDescription().isEmpty())
             {
                 // Apply error border to empty TextField
                 applyTextFieldErrorBorder(textFields.get(todoList.getAllListItems().get(i)));
-
-                allItemDescriptionsNonEmpty = false;
             }
         }
-
-        return allItemDescriptionsNonEmpty;
     }
 
     @FXML
     public void saveSelectedListsMenuItemSelected()
     {
         // Validate that all item descriptions are non-empty
-        if(validateAllItemDescriptionsNonEmpty())
+        if(todoList.validateAllItemDescriptionsNonEmpty())
         {
             ApplicationStateSerializer serializer = new ApplicationStateSerializer();
 
@@ -150,6 +142,7 @@ public class TodoListApplicationController
         }
         else
         {
+            highlightEmptyDescriptions();
             emptyItemDescriptionExistsOnSaveListAlert.show();
             listFilterOptionToggleGroup.selectToggle(viewAllItemsRadioMenuItem);
         }

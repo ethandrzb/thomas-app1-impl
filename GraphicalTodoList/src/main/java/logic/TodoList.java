@@ -131,6 +131,22 @@ public class TodoList
         });
     }
 
+    // Returns true if all items have non-empty descriptions
+    public boolean validateAllItemDescriptionsNonEmpty()
+    {
+        boolean allItemDescriptionsNonEmpty = true;
+
+        for(int i = 0; i < getListSize().get(); i++)
+        {
+            if(getAllListItems().get(i).getDescription().isEmpty())
+            {
+                allItemDescriptionsNonEmpty = false;
+            }
+        }
+
+        return allItemDescriptionsNonEmpty;
+    }
+
     public void clear()
     {
         listItems.clear();
