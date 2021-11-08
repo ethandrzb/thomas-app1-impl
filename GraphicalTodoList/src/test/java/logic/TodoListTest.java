@@ -176,13 +176,13 @@ class TodoListTest
     }
 
     @Test
-    void canStoreAtLeast256Items()
+    void canStoreAtLeast100Items()
     {
         ArrayList<ListItem> expected = new ArrayList<>();
         Random rand = new Random();
 
-        // Algorithmically generate 260 ListItems
-        for(int i = 0; i < 260; i++)
+        // Algorithmically generate 110 ListItems
+        for(int i = 0; i < 110; i++)
         {
             expected.add(new ListItem(rand.nextBoolean(), "item #" + i, null));
         }
